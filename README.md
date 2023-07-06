@@ -1,6 +1,5 @@
 # CraftingHomes
 
------------------
 A simple Home plugin.
 
 By itself, this is supposed to be a simple Home 
