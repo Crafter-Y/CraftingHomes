@@ -1,0 +1,7 @@
+name: CraftingHomes
+version: '${version}'
+main: de.craftery.craftinghomes.CraftingHomes
+api-version: 1.20
+authors: [Crafter_Y]
+description: A simple homes plugin
+website: https://crafter-y.de
