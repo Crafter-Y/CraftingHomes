@@ -16,7 +16,7 @@ Several things can be configured in the `config.yml` file.
 ## Roadmap
 - [x] Persistent Data Storage
 - [x] Configurable Homes per player
-- [ ] Translation
-- [ ] Dependency Injection for command discovery
+- [ ] reflection for command discovery
 - [ ] abstract command definition syntax (with annotations)
 - [ ] possibility for other implementations like fabric or forge
+- [ ] i18n
