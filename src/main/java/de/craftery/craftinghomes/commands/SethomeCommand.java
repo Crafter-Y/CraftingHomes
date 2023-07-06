@@ -35,8 +35,8 @@ public class SethomeCommand implements CommandExecutor, TabCompleter {
             CraftingHomes.deleteHome(player, home);
         }
 
-        if (CraftingHomes.getHomes(player).size() >= 3) {
-            player.sendMessage(Component.text("You can only have 3 homes!").color(NamedTextColor.RED));
+        if (CraftingHomes.getHomes(player).size() >= CraftingHomes.getMaxHomes()) {
+            player.sendMessage(Component.text("You can only have "+ CraftingHomes.getMaxHomes() +" homes!").color(NamedTextColor.RED));
             return true;
         }
 

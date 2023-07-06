@@ -1,0 +1,5 @@
+# The maximum amount of homes a player can have
+maxHomes: 3
+
+# This is the location where homes get saved by default
+homes:
