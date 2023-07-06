@@ -1,7 +1,9 @@
 package de.craftery.craftinghomes.commands;
 
+import com.google.auto.service.AutoService;
 import de.craftery.craftinghomes.CraftingHomes;
 import de.craftery.craftinghomes.Home;
+import de.craftery.craftinghomes.common.AbstractCommand;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
@@ -15,7 +17,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SethomeCommand implements CommandExecutor, TabCompleter {
+@AutoService(AbstractCommand.class)
+public class SethomeCommand extends AbstractCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (!(sender instanceof Player player)) {

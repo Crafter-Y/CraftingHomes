@@ -4,6 +4,8 @@ import de.craftery.craftinghomes.commands.DelhomeCommand;
 import de.craftery.craftinghomes.commands.HomeCommand;
 import de.craftery.craftinghomes.commands.HomesCommand;
 import de.craftery.craftinghomes.commands.SethomeCommand;
+import de.craftery.craftinghomes.common.Platform;
+import de.craftery.craftinghomes.common.ServerEntry;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -16,18 +18,17 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.logging.Level;
 
-public final class CraftingHomes extends JavaPlugin {
+public final class CraftingHomes extends JavaPlugin implements ServerEntry {
     private static CraftingHomes instance;
-
-    //private static final Map<UUID, List<Home>> homes = new HashMap<>();
 
     private final List<String> commands = new ArrayList<>();
 
     @Override
     public void onEnable() {
         instance = this;
-        this.getLogger().fine("CraftingHomes is starting up!");
+        Platform.onEnable(this);
         this.saveDefaultConfig();
 
         registerCommand("sethome", new SethomeCommand());
@@ -38,12 +39,12 @@ public final class CraftingHomes extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        this.getLogger().fine("CraftingHomes is shutting down!");
+        Platform.shutdown();
 
         unregisterCommands();
     }
 
-    private <T extends CommandExecutor & TabCompleter> void  registerCommand(String command, T inst) {
+    private <T extends CommandExecutor & TabCompleter> void registerCommand(String command, T inst) {
         this.commands.add(command);
 
         PluginCommand pluginCommand = this.getCommand(command);
@@ -132,5 +133,10 @@ public final class CraftingHomes extends JavaPlugin {
 
         playerSection.set(home.getName(), null);
         instance.saveConfig();
+    }
+
+    @Override
+    public void log(String message) {
+        instance.getLogger().log(Level.INFO, message);
     }
 }
