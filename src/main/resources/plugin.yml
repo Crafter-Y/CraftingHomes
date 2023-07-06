@@ -5,3 +5,41 @@ api-version: 1.20
 authors: [Crafter_Y]
 description: A simple homes plugin
 website: https://crafter-y.de
+
+commands:
+  home:
+    description: Teleport to your home
+    usage: /home [name]
+    aliases: [h]
+    permission: craftinghomes.home
+  sethome:
+    description: Set your home
+    usage: /sethome [name]
+    aliases: [sh]
+    permission: craftinghomes.sethome
+  delhome:
+    description: Delete your home
+    usage: /delhome [name]
+    aliases: [dh]
+    permission: craftinghomes.delhome
+  homes:
+    description: List your homes
+    usage: /homes
+    permission: craftinghomes.homes
+
+permissions:
+  craftinghomes.*:
+    description: Gives access to all CraftingHomes commands
+    children:
+      craftinghomes.home:
+        default: true
+        description: Gives access to the /home command
+      craftinghomes.sethome:
+        default: true
+        description: Gives access to the /sethome command
+      craftinghomes.delhome:
+        default: true
+        description: Gives access to the /delhome command
+      craftinghomes.homes:
+        default: true
+        description: Gives access to the /homes command
