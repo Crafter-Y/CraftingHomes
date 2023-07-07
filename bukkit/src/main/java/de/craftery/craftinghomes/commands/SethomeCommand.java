@@ -18,7 +18,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @AutoService(AbstractCommand.class)
-public class SethomeCommand extends AbstractCommand implements CommandExecutor, TabCompleter {
+public class SethomeCommand extends AbstractCommand {
+    public SethomeCommand() {
+        super("sethome");
+    }
+
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (!(sender instanceof Player player)) {

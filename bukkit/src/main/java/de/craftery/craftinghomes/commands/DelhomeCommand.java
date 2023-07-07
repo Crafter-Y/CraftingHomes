@@ -18,7 +18,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @AutoService(AbstractCommand.class)
-public class DelhomeCommand extends AbstractCommand implements CommandExecutor, TabCompleter {
+public class DelhomeCommand extends AbstractCommand {
+    public DelhomeCommand() {
+        super("delhome");
+    }
+
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (!(sender instanceof Player player)) {

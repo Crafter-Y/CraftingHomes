@@ -4,8 +4,11 @@ import de.craftery.craftinghomes.commands.DelhomeCommand;
 import de.craftery.craftinghomes.commands.HomeCommand;
 import de.craftery.craftinghomes.commands.HomesCommand;
 import de.craftery.craftinghomes.commands.SethomeCommand;
+import de.craftery.craftinghomes.common.AbstractCommand;
 import de.craftery.craftinghomes.common.Platform;
 import de.craftery.craftinghomes.common.ServerEntry;
+import de.craftery.craftinghomes.helper.CommandStub;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -138,5 +141,10 @@ public final class CraftingHomes extends JavaPlugin implements ServerEntry {
     @Override
     public void log(String message) {
         instance.getLogger().log(Level.INFO, message);
+    }
+
+    @Override
+    public void registerCommand(AbstractCommand command) {
+        this.registerCommand(command.getName(), new CommandStub(command));
     }
 }

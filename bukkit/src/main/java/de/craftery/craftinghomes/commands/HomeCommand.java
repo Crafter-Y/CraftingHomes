@@ -18,13 +18,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 @AutoService(AbstractCommand.class)
-public class HomeCommand extends AbstractCommand implements CommandExecutor, TabCompleter {
+public class HomeCommand extends AbstractCommand {
+    public HomeCommand() {
+        super("home");
+    }
+
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (!(sender instanceof Player player)) {
+    public boolean onCommand(CommandSenderI sender, String[] args) {
+        if (!sender.isPlayer()) {
             sender.sendMessage(Component.text("You must be a player to use this command!").color(NamedTextColor.RED));
             return true;
         }
+        PlayerI player = sender.getPlayer();
 
         String homeName;
         if (args.length == 0) {
@@ -46,8 +51,8 @@ public class HomeCommand extends AbstractCommand implements CommandExecutor, Tab
     }
 
     @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (!(sender instanceof Player player)) {
+    public List<String> onTabComplete(CommandSenderI sender, String[] args) {
+        if (!sender.isPlayer()) {
             return new ArrayList<>();
         }
         if (args.length == 1) {
