@@ -1,8 +1,8 @@
 package de.craftery.craftinghomes.common.api;
 
-public interface CommandSender {
+public interface CommandSenderI {
     boolean isPlayer();
-    void sendMessage(Component message);
+    void sendMessage(String message);
 
     PlayerI getPlayer();
 }

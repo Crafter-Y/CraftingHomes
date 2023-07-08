@@ -1,6 +1,6 @@
 name: CraftingHomes
 version: '${version}'
-main: de.craftery.craftinghomes.CraftingHomes
+main: de.craftery.craftinghomes.BukkitPlatform
 api-version: 1.20
 authors: [Crafter_Y]
 description: A simple homes plugin

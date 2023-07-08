@@ -1,6 +1,5 @@
 plugins {
     id("java-library")
-    id("xyz.jpenilla.run-paper") version "2.1.0"
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
@@ -10,20 +9,14 @@ version = '1.0'
 repositories {
     mavenCentral()
     maven {
-        name = "papermc-repo"
-        url = "https://repo.papermc.io/repository/maven-public/"
-    }
-    maven {
         name = "sonatype"
         url = "https://oss.sonatype.org/content/groups/public/"
     }
 }
 
 dependencies {
-    compileOnly "io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT"
     annotationProcessor implementation("com.google.auto.service:auto-service:1.1.0")
-    shadow(project(":craftinghomes"))
-    shadow(project(":common"))
+    compileOnly(project(":common"))
 }
 
 tasks {
@@ -39,10 +32,6 @@ tasks {
     }
 }
 
-runServer {
-    minecraftVersion("1.20.1")
-}
-
 def targetJavaVersion = 17
 java {
     def javaVersion = JavaVersion.toVersion(targetJavaVersion)
@@ -56,14 +45,5 @@ java {
 tasks.withType(JavaCompile).configureEach {
     if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
         options.release = targetJavaVersion
-    }
-}
-
-processResources {
-    def props = [version: version]
-    inputs.properties props
-    filteringCharset 'UTF-8'
-    filesMatching('plugin.yml') {
-        expand props
     }
 }

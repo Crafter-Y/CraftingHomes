@@ -1,5 +1,11 @@
 package de.craftery.craftinghomes.impl;
 
+import de.craftery.craftinghomes.common.api.CommandSenderI;
+import de.craftery.craftinghomes.common.api.PlayerI;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
+
 public class CommandSenderImpl implements CommandSenderI {
     protected final CommandSender bukkitCommandSender;
 
@@ -9,12 +15,14 @@ public class CommandSenderImpl implements CommandSenderI {
 
     @Override
     public boolean isPlayer() {
-        return bukkitCommandSender instanceof Player;
+        return this instanceof PlayerImpl;
     }
 
     @Override
-    public void sendMessage(Component message) {
-        bukkitCommandSender.sendMessage(message);
+    public void sendMessage(String message) {
+        bukkitCommandSender.sendMessage(
+                LegacyComponentSerializer.legacySection().deserialize(
+                        ChatColor.translateAlternateColorCodes('&', message)));
     }
 
     @Override

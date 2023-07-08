@@ -1,5 +1,9 @@
 package de.craftery.craftinghomes.common;
 
+import de.craftery.craftinghomes.common.api.CommandSenderI;
+
+import java.util.List;
+
 public abstract class AbstractCommand {
     private final String name;
 

@@ -4,20 +4,14 @@ import com.google.auto.service.AutoService;
 import de.craftery.craftinghomes.CraftingHomes;
 import de.craftery.craftinghomes.Home;
 import de.craftery.craftinghomes.common.AbstractCommand;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import de.craftery.craftinghomes.common.api.CommandSenderI;
+import de.craftery.craftinghomes.common.api.PlayerI;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @AutoService(AbstractCommand.class)
+@SuppressWarnings("unused")
 public class HomeCommand extends AbstractCommand {
     public HomeCommand() {
         super("home");
@@ -26,7 +20,7 @@ public class HomeCommand extends AbstractCommand {
     @Override
     public boolean onCommand(CommandSenderI sender, String[] args) {
         if (!sender.isPlayer()) {
-            sender.sendMessage(Component.text("You must be a player to use this command!").color(NamedTextColor.RED));
+            sender.sendMessage("&cYou must be a player to use this command!");
             return true;
         }
         PlayerI player = sender.getPlayer();
@@ -40,23 +34,23 @@ public class HomeCommand extends AbstractCommand {
 
         Home home = CraftingHomes.getHome(player, homeName);
         if (home == null) {
-            player.sendMessage(Component.text("Home with the name ").color(NamedTextColor.RED).append(Component.text(homeName).color(NamedTextColor.AQUA)).append(Component.text(" does not exist!").color(NamedTextColor.RED)));
+            player.sendMessage("&cHome with the name &b" + homeName + "&c does not exist!");
             return true;
         }
 
-        player.teleport(home.getLocation());
-        player.sendMessage(Component.text("You have been teleported to your home ").color(NamedTextColor.GREEN).append(Component.text(homeName).color(NamedTextColor.AQUA)).append(Component.text("!").color(NamedTextColor.GREEN)));
+        player.teleport(home.location());
+        player.sendMessage("&aYou have been teleported to your home &b" + homeName + "&a!");
 
         return true;
     }
 
     @Override
     public List<String> onTabComplete(CommandSenderI sender, String[] args) {
-        if (!sender.isPlayer()) {
+        if (!(sender instanceof PlayerI player)) {
             return new ArrayList<>();
         }
         if (args.length == 1) {
-            return CraftingHomes.getHomes(player).stream().map(Home::getName).toList();
+            return CraftingHomes.getHomes(player).stream().map(Home::name).toList();
         }
 
         return new ArrayList<>();

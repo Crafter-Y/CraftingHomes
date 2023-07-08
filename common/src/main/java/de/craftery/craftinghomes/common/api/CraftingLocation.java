@@ -1,14 +1,14 @@
 package de.craftery.craftinghomes.common.api;
 
-public abstract class LocationI {
+public class CraftingLocation {
     private final String world;
     private final double x;
     private final double y;
     private final double z;
     private final float yaw;
-    private final floar pitch;
+    private final float pitch;
 
-    public LocationI(String world, double x, double y, double z, float yaw, float pitch) {
+    public CraftingLocation(String world, double x, double y, double z, float yaw, float pitch) {
         this.world = world;
         this.x = x;
         this.y = y;
@@ -26,18 +26,18 @@ public abstract class LocationI {
     }
 
     public double getY() {
-        return this.x;
+        return this.y;
     }
 
     public double getZ() {
-        return this.x;
+        return this.z;
     }
 
-    public flaot getYaw() {
+    public float getYaw() {
         return this.yaw;
     }
 
-    public flaot getPitch() {
+    public float getPitch() {
         return this.pitch;
     }
 

@@ -8,7 +8,8 @@ public class Platform {
         server.log("CraftingHomes is starting up!");
 
         for (AbstractCommand command : ReflectionUtil.getCommands()) {
-            server.log(command.getClass().getName());
+            server.log("Registering command " + command.getName());
+            server.registerCommand(command);
         }
     }
 

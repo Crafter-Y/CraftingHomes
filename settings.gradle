@@ -2,3 +2,4 @@ rootProject.name = 'CraftingHomes'
 
 include ":bukkit"
 include ":common"
+include ":craftinghomes"
