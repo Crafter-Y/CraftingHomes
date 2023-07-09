@@ -3,6 +3,7 @@ package de.craftery.craftinghomes.common;
 import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.HashSet;
@@ -32,7 +33,7 @@ public class ReflectionUtil {
         Set<String> classNames = new HashSet<>();
         while (serviceFiles.hasMoreElements()) {
             URL serviceFile = serviceFiles.nextElement();
-            try (var reader = serviceFile.openStream()) {
+            try (InputStream reader = serviceFile.openStream()) {
                 classNames.addAll(IOUtils.readLines(reader, "UTF-8"));
             }
         }
