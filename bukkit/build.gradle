@@ -19,7 +19,7 @@ dependencies {
 
 tasks {
     shadowJar {
-        archiveClassifier.set("bukkit")
+        archiveFileName.set("CraftingHomes-bukkit-v${version}-1.8.8-${findProperty('latestMinecraftVersion')}.jar")
         destinationDirectory = file("$rootDir/build")
     }
 }
