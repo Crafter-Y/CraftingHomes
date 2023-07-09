@@ -1,49 +1,11 @@
 plugins {
-    id("java-library")
-    id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("craftinghomes.java")
 }
 
 group = 'de.craftery'
 version = '1.0'
 
-repositories {
-    mavenCentral()
-    maven {
-        name = "sonatype"
-        url = "https://oss.sonatype.org/content/groups/public/"
-    }
-}
-
 dependencies {
     annotationProcessor implementation("com.google.auto.service:auto-service:1.1.0")
     compileOnly(project(":common"))
-}
-
-tasks {
-    shadowJar {
-        archiveClassifier.set(null)
-        configurations = [project.configurations.shadow]
-    }
-    jar {
-        archiveClassifier.set("unshaded")
-    }
-    build {
-        dependsOn(shadowJar)
-    }
-}
-
-def targetJavaVersion = 17
-java {
-    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
-    sourceCompatibility = javaVersion
-    targetCompatibility = javaVersion
-    if (JavaVersion.current() < javaVersion) {
-        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
-    }
-}
-
-tasks.withType(JavaCompile).configureEach {
-    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
-        options.release = targetJavaVersion
-    }
 }
