@@ -17,5 +17,5 @@ Several things can be configured in the `config.yml` file.
 - [x] Configurable Homes per player
 - [x] reflection for command discovery
 - [x] abstract command definition syntax (with annotations)
-- [ ] i18n
+- [ ] configurable i18n
 - [ ] other implementations like fabric or forge

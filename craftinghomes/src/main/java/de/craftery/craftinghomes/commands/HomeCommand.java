@@ -20,7 +20,7 @@ public class HomeCommand extends AbstractCommand {
     @Override
     public boolean onCommand(CommandSenderI sender, String[] args) {
         if (!sender.isPlayer()) {
-            sender.sendMessage("&cYou must be a player to use this command!");
+            sender.sendMessage(this.i18n.senderNotPlayer());
             return true;
         }
         PlayerI player = sender.getPlayer();
@@ -34,12 +34,12 @@ public class HomeCommand extends AbstractCommand {
 
         Home home = CraftingHomes.getHome(player, homeName);
         if (home == null) {
-            player.sendMessage("&cHome with the name &b" + homeName + "&c does not exist!");
+            player.sendMessage(this.i18n.homeNotExisting(homeName));
             return true;
         }
 
         player.teleport(home.location());
-        player.sendMessage("&aYou have been teleported to your home &b" + homeName + "&a!");
+        player.sendMessage(this.i18n.teleportedToHome(homeName));
 
         return true;
     }

@@ -1,18 +1,39 @@
 package de.craftery.craftinghomes.impl;
 
+import com.google.common.base.Charsets;
 import de.craftery.craftinghomes.BukkitPlatform;
 import de.craftery.craftinghomes.common.api.ConfigurationI;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 
+import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashSet;
 import java.util.Set;
 
 public class ConfigrationImpl implements ConfigurationI {
     private final FileConfiguration config;
+    private final File configFile;
 
-    public ConfigrationImpl(FileConfiguration config) {
-        this.config = config;
+    public ConfigrationImpl(File configDirectory) {
+        this(configDirectory, "config.yml");
+    }
+
+    public ConfigrationImpl (File configDirectory, String configName) {
+        this.configFile = new File(configDirectory, configName);
+        this.config = YamlConfiguration.loadConfiguration(configFile);
+        this.tryLoadDefaults(this.config, configName);
+    }
+
+    private void tryLoadDefaults(FileConfiguration config, String configName) {
+        InputStream defConfigStream = BukkitPlatform.getInstance().getResource(configName);
+        if (defConfigStream == null) {
+            return;
+        }
+
+        config.setDefaults(YamlConfiguration.loadConfiguration(new InputStreamReader(defConfigStream, Charsets.UTF_8)));
     }
 
     @Override
@@ -49,6 +70,11 @@ public class ConfigrationImpl implements ConfigurationI {
 
     @Override
     public void saveConfig() {
-        BukkitPlatform.saveConfiguration();
+        try {
+            this.config.save(this.configFile);
+        } catch (Exception e) {
+            throw new RuntimeException("Could not save config file!", e);
+        }
+
     }
 }

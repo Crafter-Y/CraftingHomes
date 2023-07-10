@@ -20,7 +20,7 @@ public class SethomeCommand extends AbstractCommand {
     @Override
     public boolean onCommand(CommandSenderI sender, String[] args) {
         if (!(sender instanceof PlayerI player)) {
-            sender.sendMessage("&cYou must be a player to use this command!");
+            sender.sendMessage(this.i18n.senderNotPlayer());
             return true;
         }
 
@@ -37,7 +37,7 @@ public class SethomeCommand extends AbstractCommand {
         }
 
         if (CraftingHomes.getHomes(player).size() >= CraftingHomes.getMaxHomes()) {
-            player.sendMessage("&cYou can only have "+ CraftingHomes.getMaxHomes() +" homes!");
+            player.sendMessage(this.i18n.maxHomesReached(CraftingHomes.getMaxHomes()));
             return true;
         }
 
