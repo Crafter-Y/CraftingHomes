@@ -1,37 +1,23 @@
 package de.craftery.craftinghomes.commands;
 
-import com.google.auto.service.AutoService;
 import de.craftery.craftinghomes.CraftingHomes;
 import de.craftery.craftinghomes.Home;
-import de.craftery.craftinghomes.common.AbstractCommand;
-import de.craftery.craftinghomes.common.api.CommandSenderI;
+import de.craftery.craftinghomes.annotation.annotations.Argument;
+import de.craftery.craftinghomes.annotation.annotations.Command;
+import de.craftery.craftinghomes.common.PlayerOnlyCommand;
 import de.craftery.craftinghomes.common.api.PlayerI;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@AutoService(AbstractCommand.class)
+@Command(name = "home")
 @SuppressWarnings("unused")
-public class HomeCommand extends AbstractCommand {
-    public HomeCommand() {
-        super("home");
-    }
+public class HomeCommand extends PlayerOnlyCommand {
+    @Argument(defaultValue = "default")
+    private String homeName;
 
     @Override
-    public boolean onCommand(CommandSenderI sender, String[] args) {
-        if (!sender.isPlayer()) {
-            sender.sendMessage(this.i18n.senderNotPlayer());
-            return true;
-        }
-        PlayerI player = sender.getPlayer();
-
-        String homeName;
-        if (args.length == 0) {
-            homeName = "default";
-        } else {
-            homeName = args[0];
-        }
-
+    public boolean onCommand(PlayerI player) {
         Home home = CraftingHomes.getHome(player, homeName);
         if (home == null) {
             player.sendMessage(this.i18n.homeNotExisting(homeName));
@@ -45,11 +31,8 @@ public class HomeCommand extends AbstractCommand {
     }
 
     @Override
-    public List<String> onTabComplete(CommandSenderI sender, String[] args) {
-        if (!(sender instanceof PlayerI player)) {
-            return new ArrayList<>();
-        }
-        if (args.length == 1) {
+    public List<String> onTabComplete(PlayerI player, int argLength) {
+        if (argLength == 1) {
             return CraftingHomes.getHomes(player).stream().map(Home::name).toList();
         }
 

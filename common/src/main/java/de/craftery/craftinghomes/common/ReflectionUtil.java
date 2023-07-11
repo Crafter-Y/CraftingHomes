@@ -19,7 +19,7 @@ public class ReflectionUtil {
     public static Set<? extends AbstractCommand> getCommands() {
         if (commands == null) {
             try {
-                commands = serviceLoad(AbstractCommand.class);
+                commands = discoverClasses(AbstractCommand.class);
             } catch (IOException e) {
                 throw new RuntimeException("Failed to load features", e);
             }
@@ -27,12 +27,12 @@ public class ReflectionUtil {
         return commands;
     }
 
-    private static <T> Set<? extends T> serviceLoad(Class<T> clazz) throws IOException {
+    private static <T> Set<? extends T> discoverClasses(Class<T> clazz) throws IOException {
         ClassLoader cl = ReflectionUtil.class.getClassLoader();
-        Enumeration<URL> serviceFiles = cl.getResources("META-INF/services/" + clazz.getName());
+        Enumeration<URL> commandsFile = cl.getResources("commands.txt");
         Set<String> classNames = new HashSet<>();
-        while (serviceFiles.hasMoreElements()) {
-            URL serviceFile = serviceFiles.nextElement();
+        if (commandsFile.hasMoreElements()) {
+            URL serviceFile = commandsFile.nextElement();
             try (InputStream reader = serviceFile.openStream()) {
                 classNames.addAll(IOUtils.readLines(reader, "UTF-8"));
             }
@@ -53,7 +53,7 @@ public class ReflectionUtil {
                 .collect(Collectors.toSet());
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "unused"})
     private static <T> @Nullable Class<? extends T> loadClass(String className) {
         try {
             return (Class<? extends T>) Class.forName(className);

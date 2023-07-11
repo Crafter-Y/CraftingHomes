@@ -19,5 +19,7 @@ public interface Messages {
     String yourHomes(String homeNames);
     @I18nDef(def = "&cYou can only have ${maxHomes} homes!")
     String maxHomesReached(Integer maxHomes);
+    @I18nDef(def = "&cYou must provide the argument ${argument}!")
+    String argumentIsRequired(String argument);
 
 }

@@ -3,6 +3,8 @@ plugins {
 }
 
 dependencies {
-    annotationProcessor implementation("com.google.auto.service:auto-service:1.1.0")
     compileOnly(project(":common"))
+    implementation 'org.jetbrains:annotations:24.0.1'
+    implementation(project(":annotations"))
+    annotationProcessor(project(":annotations"))
 }

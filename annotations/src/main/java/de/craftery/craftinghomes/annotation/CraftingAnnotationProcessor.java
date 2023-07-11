@@ -1,5 +1,6 @@
 package de.craftery.craftinghomes.annotation;
 
+import de.craftery.craftinghomes.annotation.annotations.Command;
 import de.craftery.craftinghomes.annotation.annotations.I18nDef;
 import de.craftery.craftinghomes.annotation.annotations.I18nSource;
 
@@ -10,9 +11,12 @@ import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.*;
 import javax.tools.Diagnostic;
+import javax.tools.FileObject;
 import javax.tools.JavaFileObject;
+import javax.tools.StandardLocation;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.Writer;
 import java.util.*;
 
 @SupportedAnnotationTypes("de.craftery.craftinghomes.annotation.annotations.*")
@@ -20,7 +24,38 @@ import java.util.*;
 public class CraftingAnnotationProcessor extends AbstractProcessor {
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        return processI18nAnnotations(roundEnv);
+        return processI18nAnnotations(roundEnv) || processCommandAnnotations(roundEnv);
+    }
+
+    private boolean processCommandAnnotations(RoundEnvironment roundEnv) {
+        Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(Command.class);
+        if (elements.size() == 0) {
+            return false;
+        }
+
+        List<String> commands = new ArrayList<>();
+        for (Element element : elements) {
+            if (!(element instanceof TypeElement providerClass)) {
+                error("Target must be a class");
+                return false;
+            }
+
+            commands.add(providerClass.getQualifiedName().toString());
+        }
+
+        try {
+            FileObject file = this.processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, "", "commands.txt");
+            try (Writer w = file.openWriter()) {
+                String raw = String.join("\n", commands);
+                w.write(raw);
+                w.flush();
+                w.close();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return true;
     }
 
     private boolean processI18nAnnotations(RoundEnvironment roundEnv) {

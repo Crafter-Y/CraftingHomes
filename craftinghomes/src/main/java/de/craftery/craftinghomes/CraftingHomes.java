@@ -4,8 +4,8 @@ import de.craftery.craftinghomes.common.Platform;
 import de.craftery.craftinghomes.common.api.ConfigurationI;
 import de.craftery.craftinghomes.common.api.CraftingLocation;
 import de.craftery.craftinghomes.common.api.PlayerI;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.*;
 
 public class CraftingHomes {
