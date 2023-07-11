@@ -20,5 +20,5 @@ You can add your own language by creating a new file your_language.lang.yml
 - [x] Configurable Homes per player
 - [x] reflection for command discovery
 - [x] abstract command definition syntax (with annotations)
-- [ ] configurable i18n
+- [x] configurable i18n
 - [ ] other implementations like fabric or forge
