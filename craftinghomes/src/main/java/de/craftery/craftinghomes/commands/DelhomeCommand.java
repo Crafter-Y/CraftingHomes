@@ -20,7 +20,7 @@ public class DelhomeCommand extends AbstractCommand {
     @Override
     public boolean onCommand(CommandSenderI sender, String[] args) {
         if (!(sender instanceof PlayerI player)) {
-            sender.sendMessage("&cYou must be a player to use this command!");
+            sender.sendMessage(this.i18n.senderNotPlayer());
             return true;
         }
 
@@ -33,12 +33,12 @@ public class DelhomeCommand extends AbstractCommand {
 
         Home home = CraftingHomes.getHome(player, homeName);
         if (home == null) {
-            player.sendMessage("&cHome with the name &b" + homeName + " &cdoes not exist!");
+            player.sendMessage(this.i18n.homeNotExisting(homeName));
             return true;
         }
 
         CraftingHomes.deleteHome(player, home);
-        player.sendMessage("&aHome &b" + homeName +" &adeleted!");
+        player.sendMessage(this.i18n.homeDeleted(homeName));
 
         return true;
     }

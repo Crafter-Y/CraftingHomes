@@ -64,6 +64,10 @@ public class CraftingHomes {
 
         String homeSection = playerSection + "." + name;
 
+        if (!config.exists(homeSection)) {
+            return null;
+        }
+
         return new Home(name, new CraftingLocation(
                 config.getString(homeSection + ".world", "world"),
                 config.getDouble(homeSection + ".x"),

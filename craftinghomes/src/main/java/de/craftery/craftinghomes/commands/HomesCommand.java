@@ -20,18 +20,18 @@ public class HomesCommand extends AbstractCommand {
     @Override
     public boolean onCommand(CommandSenderI sender, String[] args) {
         if (!(sender instanceof PlayerI player)) {
-            sender.sendMessage("&cYou must be a player to use this command!");
+            sender.sendMessage(this.i18n.senderNotPlayer());
             return true;
         }
 
         List<Home> homes = CraftingHomes.getHomes(player);
 
         if (homes.isEmpty()) {
-            player.sendMessage("&cYou don't have any homes!");
+            player.sendMessage(this.i18n.noHomes());
             return true;
         }
         String homeNames = String.join(", ", homes.stream().map(Home::name).toList());
-        player.sendMessage("&aYour homes: &b" + homeNames);
+        player.sendMessage(this.i18n.yourHomes(homeNames));
 
         return true;
     }

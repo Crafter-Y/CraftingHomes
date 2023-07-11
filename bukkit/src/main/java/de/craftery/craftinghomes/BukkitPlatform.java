@@ -66,10 +66,15 @@ public final class BukkitPlatform extends JavaPlugin implements ServerEntry {
 
     @Override
     public ConfigurationI getConfiguration() {
-        return new ConfigrationImpl(this.getConfig());
+        return new ConfigrationImpl(this.getDataFolder());
     }
 
-    public static void saveConfiguration() {
-        instance.saveConfig();
+    @Override
+    public ConfigurationI getConfiguration(String configFileName) {
+        return new ConfigrationImpl(this.getDataFolder(), configFileName);
+    }
+
+    public static BukkitPlatform getInstance() {
+        return instance;
     }
 }
