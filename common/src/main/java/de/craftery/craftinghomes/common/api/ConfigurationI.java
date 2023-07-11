@@ -10,4 +10,6 @@ public interface ConfigurationI {
     boolean exists(String path);
     Set<String> getKeys(String path);
     void saveConfig();
+    void addDefault(String path, Object value);
+    void applyDefaults();
 }

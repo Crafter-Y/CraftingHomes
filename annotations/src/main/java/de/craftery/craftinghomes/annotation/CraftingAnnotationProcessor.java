@@ -20,6 +20,10 @@ import java.util.*;
 public class CraftingAnnotationProcessor extends AbstractProcessor {
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+        return processI18nAnnotations(roundEnv);
+    }
+
+    private boolean processI18nAnnotations(RoundEnvironment roundEnv) {
         Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(I18nSource.class);
         if (elements.size() > 1) {
             error("There can only be one I18nSource per project for now!");

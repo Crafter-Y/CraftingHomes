@@ -77,4 +77,15 @@ public class ConfigrationImpl implements ConfigurationI {
         }
 
     }
+
+    @Override
+    public void addDefault(String path, Object value) {
+        this.config.addDefault(path, value);
+    }
+
+    @Override
+    public void applyDefaults() {
+        this.config.options().copyDefaults(true);
+        this.saveConfig();
+    }
 }
