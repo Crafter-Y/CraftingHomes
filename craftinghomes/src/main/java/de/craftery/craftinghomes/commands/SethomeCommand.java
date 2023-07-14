@@ -1,9 +1,9 @@
 package de.craftery.craftinghomes.commands;
 
-import de.craftery.craftinghomes.CraftingHomes;
 import de.craftery.craftinghomes.Home;
 import de.craftery.craftinghomes.annotation.annotations.Argument;
 import de.craftery.craftinghomes.annotation.annotations.Command;
+import de.craftery.craftinghomes.common.Platform;
 import de.craftery.craftinghomes.common.PlayerOnlyCommand;
 import de.craftery.craftinghomes.common.api.PlayerI;
 
@@ -18,17 +18,22 @@ public class SethomeCommand extends PlayerOnlyCommand {
 
     @Override
     public boolean onCommand(PlayerI player) {
-        Home home = CraftingHomes.getHome(player, homeName);
-        if (home != null) {
-            CraftingHomes.deleteHome(player, home);
+        Home home = Home.getPlayerHome(player, homeName);
+        if (home == null) {
+            home = new Home();
         }
 
-        if (CraftingHomes.getHomes(player.getUniqueId()).size() >= CraftingHomes.getMaxHomes()) {
-            player.sendMessage(this.i18n.maxHomesReached(CraftingHomes.getMaxHomes()));
+        Integer maxHomes = Platform.getServer().getConfiguration().getInt("maxHomes", 3);
+        if (Home.getByPlayer(player).size() >= maxHomes) {
+            player.sendMessage(this.i18n.maxHomesReached(maxHomes));
             return true;
         }
 
-        CraftingHomes.addHome(player, new Home(homeName, player.getLocation()));
+        home.setPlayer(player);
+        home.setName(homeName);
+        home.setLocation(player.getLocation());
+
+        home.saveOrUpdate();
 
         player.sendMessage("&aHome with the name &b" + homeName + " &ahas been set!");
 

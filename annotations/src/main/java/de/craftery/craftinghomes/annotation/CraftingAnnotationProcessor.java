@@ -1,6 +1,7 @@
 package de.craftery.craftinghomes.annotation;
 
 import de.craftery.craftinghomes.annotation.annotations.Command;
+import de.craftery.craftinghomes.annotation.annotations.DataModel;
 import de.craftery.craftinghomes.annotation.annotations.I18nDef;
 import de.craftery.craftinghomes.annotation.annotations.I18nSource;
 
@@ -24,7 +25,40 @@ import java.util.*;
 public class CraftingAnnotationProcessor extends AbstractProcessor {
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        return processI18nAnnotations(roundEnv) || processCommandAnnotations(roundEnv);
+        boolean success = processI18nAnnotations(roundEnv);
+        success = processCommandAnnotations(roundEnv) && success;
+        success = processDataModelAnnotations(roundEnv) && success;
+        return success;
+    }
+
+    private boolean processDataModelAnnotations(RoundEnvironment roundEnv) {
+        Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(DataModel.class);
+        if (elements.size() == 0) {
+            return false;
+        }
+        List<String> commands = new ArrayList<>();
+        for (Element element : elements) {
+            if (!(element instanceof TypeElement providerClass)) {
+                error("Target must be a class");
+                return false;
+            }
+
+            commands.add(providerClass.getQualifiedName().toString());
+        }
+
+        try {
+            FileObject file = this.processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, "", "datasources.txt");
+            try (Writer w = file.openWriter()) {
+                String raw = String.join("\n", commands);
+                w.write(raw);
+                w.flush();
+                w.close();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return true;
     }
 
     private boolean processCommandAnnotations(RoundEnvironment roundEnv) {

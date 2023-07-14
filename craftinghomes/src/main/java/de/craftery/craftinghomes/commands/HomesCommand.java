@@ -1,6 +1,5 @@
 package de.craftery.craftinghomes.commands;
 
-import de.craftery.craftinghomes.CraftingHomes;
 import de.craftery.craftinghomes.Home;
 import de.craftery.craftinghomes.annotation.annotations.Argument;
 import de.craftery.craftinghomes.annotation.annotations.Command;
@@ -28,14 +27,14 @@ public class HomesCommand extends AbstractCommand {
                 sender.sendMessage(this.i18n.senderNotPlayer());
                 return true;
             }
-            homes = CraftingHomes.getHomes(player.getUniqueId());
+            homes = Home.getByPlayer(player);
 
             if (homes.isEmpty()) {
                 sender.sendMessage(this.i18n.noHomes());
                 return true;
             }
 
-            String homeNames = String.join(", ", homes.stream().map(Home::name).toList());
+            String homeNames = String.join(", ", homes.stream().map(Home::getName).toList());
             sender.sendMessage(this.i18n.yourHomes(homeNames));
         } else {
             if (!sender.hasPermission("craftinghomes.homes.other")) {
@@ -48,14 +47,14 @@ public class HomesCommand extends AbstractCommand {
                 sender.sendMessage(this.i18n.playerNeverOnline(targetPlayer));
                 return true;
             }
-            homes = CraftingHomes.getHomes(player.getUniqueId());
+            homes = Home.getByField("uuid", player.getUniqueId());
 
             if (homes.isEmpty()) {
                 sender.sendMessage(this.i18n.noHomesPlayer(player.getName()));
                 return true;
             }
 
-            String homeNames = String.join(", ", homes.stream().map(Home::name).toList());
+            String homeNames = String.join(", ", homes.stream().map(Home::getName).toList());
             sender.sendMessage(this.i18n.playerHomes(player.getName(), homeNames));
         }
 
@@ -64,6 +63,9 @@ public class HomesCommand extends AbstractCommand {
 
     @Override
     public List<String> onTabComplete(CommandSenderI sender, int argLength) {
+        if (argLength == 1 && sender.hasPermission("craftinghomes.homes.other")) {
+            return null;
+        }
         return new ArrayList<>();
     }
 }

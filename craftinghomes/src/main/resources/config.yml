@@ -4,5 +4,5 @@ maxHomes: 3
 # The language to use. All language files must be in format language.lang.yml e.g. en.lang.yml
 language: en
 
-# This is the location where homes get saved by default
-homes:
+# The configuration type to use. Supported providers: (yml)
+storage: yml

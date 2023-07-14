@@ -12,6 +12,7 @@ Several things can be configured in the `config.yml` file.
 
 - maxHomes: The maximum amount of homes a player can have, default: 3
 - language: The language to use, default: en
+- storage: The storage to use (yml, coming soon..), default: yml
 
 You can add your own language by creating a new file your_language.lang.yml
 
@@ -31,7 +32,8 @@ Everything else is just to make it work.
 - [ ] gui for /homes
 - [x] /homes <player> for admins with permission
 - [ ] /homes <player> <home> for admins with permission
-- [ ] data storage templating
+- [x] data storage templating
 - [ ] other implementations like fabric or forge (once feature complete)
 - [ ] more ci tests
 - [ ] unit tests
+- [ ] more data storage providers (mysql, sqlite, mongodb)

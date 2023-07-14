@@ -1,6 +1,5 @@
 package de.craftery.craftinghomes.commands;
 
-import de.craftery.craftinghomes.CraftingHomes;
 import de.craftery.craftinghomes.Home;
 import de.craftery.craftinghomes.annotation.annotations.Argument;
 import de.craftery.craftinghomes.annotation.annotations.Command;
@@ -18,13 +17,13 @@ public class HomeCommand extends PlayerOnlyCommand {
 
     @Override
     public boolean onCommand(PlayerI player) {
-        Home home = CraftingHomes.getHome(player, homeName);
+        Home home = Home.getPlayerHome(player, homeName);
         if (home == null) {
             player.sendMessage(this.i18n.homeNotExisting(homeName));
             return true;
         }
 
-        player.teleport(home.location());
+        player.teleport(home.getLocation());
         player.sendMessage(this.i18n.teleportedToHome(homeName));
 
         return true;
@@ -33,7 +32,7 @@ public class HomeCommand extends PlayerOnlyCommand {
     @Override
     public List<String> onTabComplete(PlayerI player, int argLength) {
         if (argLength == 1) {
-            return CraftingHomes.getHomes(player.getUniqueId()).stream().map(Home::name).toList();
+            return Home.getByPlayer(player).stream().map(Home::getName).toList();
         }
 
         return new ArrayList<>();
