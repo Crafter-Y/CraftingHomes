@@ -28,9 +28,10 @@ Everything else is just to make it work.
 - [x] abstract command definition syntax (with annotations)
 - [x] configurable i18n
 - [x] reflection to discover and set command arguments
-- [ ] data storage templating
 - [ ] gui for /homes
-- [ ] /homes <player> for admins with permission
+- [x] /homes <player> for admins with permission
+- [ ] /homes <player> <home> for admins with permission
+- [ ] data storage templating
 - [ ] other implementations like fabric or forge (once feature complete)
 - [ ] more ci tests
 - [ ] unit tests

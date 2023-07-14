@@ -26,4 +26,9 @@ public class CommandSenderImpl implements CommandSenderI {
     public PlayerI getPlayer() {
         return (PlayerImpl) this;
     }
+
+    @Override
+    public boolean hasPermission(String permission) {
+        return bukkitCommandSender.hasPermission(permission);
+    }
 }

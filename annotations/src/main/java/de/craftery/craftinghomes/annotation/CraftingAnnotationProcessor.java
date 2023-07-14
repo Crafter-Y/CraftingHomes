@@ -80,7 +80,7 @@ public class CraftingAnnotationProcessor extends AbstractProcessor {
         }
 
         Map<String, String> translations = new HashMap<>();
-        Map<String, Map<String, String>> parameters = new HashMap<>();
+        Map<String, List<Map.Entry<String, String>>> parameters = new HashMap<>();
 
         for (Element type : providerClass.getEnclosedElements()) {
             if (type.getKind() != ElementKind.METHOD) {
@@ -98,7 +98,7 @@ public class CraftingAnnotationProcessor extends AbstractProcessor {
                 return false;
             }
 
-            Map<String, String> methodParameters = new HashMap<>();
+            List<Map.Entry<String, String>> methodParameters = new ArrayList<>();
             for (VariableElement parameter : method.getParameters()) {
                 String paramType;
                 switch (parameter.asType().toString()) {
@@ -109,7 +109,7 @@ public class CraftingAnnotationProcessor extends AbstractProcessor {
                         return false;
                     }
                 }
-                methodParameters.put(parameter.getSimpleName().toString(), paramType);
+                methodParameters.add(new AbstractMap.SimpleEntry<>(parameter.getSimpleName().toString(), paramType));
             }
 
             String def = type.getAnnotation(I18nDef.class).def();
@@ -168,7 +168,7 @@ public class CraftingAnnotationProcessor extends AbstractProcessor {
                     out.print(implementation.getKey());
                     out.print("(");
 
-                    List<String> paramTypes = parameters.get(implementation.getKey()).entrySet().stream()
+                    List<String> paramTypes = parameters.get(implementation.getKey()).stream()
                             .map(el -> el.getValue() + " " + el.getKey()).toList();
                     out.print(String.join(", ", paramTypes));
 
@@ -177,7 +177,7 @@ public class CraftingAnnotationProcessor extends AbstractProcessor {
                     out.print(implementation.getKey());
                     out.println("\");");
 
-                    for (Map.Entry<String, String> parameter : parameters.get(implementation.getKey()).entrySet()) {
+                    for (Map.Entry<String, String> parameter : parameters.get(implementation.getKey())) {
                         String replaceMethod;
                         switch (parameter.getValue()) {
                             case "String" -> replaceMethod = "replaceString";

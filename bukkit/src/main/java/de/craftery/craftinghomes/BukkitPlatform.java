@@ -4,13 +4,18 @@ import de.craftery.craftinghomes.common.AbstractCommand;
 import de.craftery.craftinghomes.common.Platform;
 import de.craftery.craftinghomes.common.ServerEntry;
 import de.craftery.craftinghomes.common.api.ConfigurationI;
+import de.craftery.craftinghomes.common.api.OfflinePlayerI;
 import de.craftery.craftinghomes.helper.CommandStub;
 
 import de.craftery.craftinghomes.impl.ConfigrationImpl;
+import de.craftery.craftinghomes.impl.OfflinePlayerImpl;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.logging.Level;
@@ -73,6 +78,14 @@ public final class BukkitPlatform extends JavaPlugin implements ServerEntry {
     public ConfigurationI getConfiguration(String configFileName) {
         return new ConfigrationImpl(this.getDataFolder(), configFileName);
     }
+
+    @Override
+    public @Nullable OfflinePlayerI getOfflinePlayer(String name) {
+        OfflinePlayer offlinePlayer = Bukkit.getServer().getOfflinePlayer(name);
+        if (!offlinePlayer.hasPlayedBefore()) return null;
+        return new OfflinePlayerImpl(offlinePlayer);
+    }
+
 
     public static BukkitPlatform getInstance() {
         return instance;

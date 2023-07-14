@@ -15,11 +15,19 @@ public interface Messages {
     String teleportedToHome(String homeName);
     @I18nDef(def = "&cYou don't have any homes!")
     String noHomes();
+    @I18nDef(def = "&cPlayer &b${player} &chas no homes!")
+    String noHomesPlayer(String player);
     @I18nDef(def = "&aYour homes: &b${homeNames}")
     String yourHomes(String homeNames);
+    @I18nDef(def = "&a${playerName}'s homes: &b${homeNames}")
+    String playerHomes(String playerName, String homeNames);
     @I18nDef(def = "&cYou can only have ${maxHomes} homes!")
     String maxHomesReached(Integer maxHomes);
     @I18nDef(def = "&cYou must provide the argument ${argument}!")
     String argumentIsRequired(String argument);
+    @I18nDef(def = "&cThe player ${player} was never online!")
+    String playerNeverOnline(String player);
+    @I18nDef(def = "&cYou dont have permission to use this command!")
+    String noPermission();
 
 }

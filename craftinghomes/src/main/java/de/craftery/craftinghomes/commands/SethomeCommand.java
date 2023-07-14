@@ -23,7 +23,7 @@ public class SethomeCommand extends PlayerOnlyCommand {
             CraftingHomes.deleteHome(player, home);
         }
 
-        if (CraftingHomes.getHomes(player).size() >= CraftingHomes.getMaxHomes()) {
+        if (CraftingHomes.getHomes(player.getUniqueId()).size() >= CraftingHomes.getMaxHomes()) {
             player.sendMessage(this.i18n.maxHomesReached(CraftingHomes.getMaxHomes()));
             return true;
         }

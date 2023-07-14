@@ -24,12 +24,13 @@ commands:
     permission: craftinghomes.delhome
   homes:
     description: List your homes
-    usage: /homes
-    permission: craftinghomes.homes
+    usage: /homes [player]
+    permission: craftinghomes.homes.use
 
 permissions:
   craftinghomes.*:
     description: Gives access to all CraftingHomes commands
+    default: op
     children:
       craftinghomes.home:
         default: true
@@ -40,6 +41,13 @@ permissions:
       craftinghomes.delhome:
         default: true
         description: Gives access to the /delhome command
-      craftinghomes.homes:
-        default: true
-        description: Gives access to the /homes command
+      craftinghomes.homes.*:
+        default: op
+        description: Gives access to all the /homes commands
+        children:
+          craftinghomes.homes.use:
+            default: true
+            description: Gives access to the /homes command
+          craftinghomes.homes.other:
+            default: op
+            description: Gives access to the /homes [player] command

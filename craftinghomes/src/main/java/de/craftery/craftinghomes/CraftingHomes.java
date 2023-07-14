@@ -13,10 +13,10 @@ public class CraftingHomes {
         return Platform.getServer().getConfiguration().getInt("maxHomes", 3);
     }
 
-    public static List<Home> getHomes(PlayerI player) {
+    public static List<Home> getHomes(String uuid) {
         ConfigurationI config = Platform.getServer().getConfiguration();
 
-        String playerSection = "homes." + player.getUniqueId();
+        String playerSection = "homes." + uuid;
         if (!config.exists(playerSection)) {
             return new ArrayList<>();
         }

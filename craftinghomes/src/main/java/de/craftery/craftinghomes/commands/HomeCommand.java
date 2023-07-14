@@ -33,7 +33,7 @@ public class HomeCommand extends PlayerOnlyCommand {
     @Override
     public List<String> onTabComplete(PlayerI player, int argLength) {
         if (argLength == 1) {
-            return CraftingHomes.getHomes(player).stream().map(Home::name).toList();
+            return CraftingHomes.getHomes(player.getUniqueId()).stream().map(Home::name).toList();
         }
 
         return new ArrayList<>();
