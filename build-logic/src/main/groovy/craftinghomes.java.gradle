@@ -33,6 +33,11 @@ tasks {
     }
 }
 
+dependencies {
+    compileOnly 'org.projectlombok:lombok:1.18.28'
+    annotationProcessor 'org.projectlombok:lombok:1.18.28'
+}
+
 def targetJavaVersion = findProperty('javaVersion') as Integer
 java {
     def javaVersion = JavaVersion.toVersion(targetJavaVersion)

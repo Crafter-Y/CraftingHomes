@@ -1,5 +1,7 @@
 package de.craftery.craftinghomes.annotation;
 
+import de.craftery.craftinghomes.annotation.annotations.Command;
+import de.craftery.craftinghomes.annotation.annotations.DataModel;
 import de.craftery.craftinghomes.annotation.annotations.I18nDef;
 import de.craftery.craftinghomes.annotation.annotations.I18nSource;
 
@@ -10,9 +12,12 @@ import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.*;
 import javax.tools.Diagnostic;
+import javax.tools.FileObject;
 import javax.tools.JavaFileObject;
+import javax.tools.StandardLocation;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.Writer;
 import java.util.*;
 
 @SupportedAnnotationTypes("de.craftery.craftinghomes.annotation.annotations.*")
@@ -20,7 +25,71 @@ import java.util.*;
 public class CraftingAnnotationProcessor extends AbstractProcessor {
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        return processI18nAnnotations(roundEnv);
+        boolean success = processI18nAnnotations(roundEnv);
+        success = processCommandAnnotations(roundEnv) && success;
+        success = processDataModelAnnotations(roundEnv) && success;
+        return success;
+    }
+
+    private boolean processDataModelAnnotations(RoundEnvironment roundEnv) {
+        Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(DataModel.class);
+        if (elements.size() == 0) {
+            return false;
+        }
+        List<String> commands = new ArrayList<>();
+        for (Element element : elements) {
+            if (!(element instanceof TypeElement providerClass)) {
+                error("Target must be a class");
+                return false;
+            }
+
+            commands.add(providerClass.getQualifiedName().toString());
+        }
+
+        try {
+            FileObject file = this.processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, "", "datasources.txt");
+            try (Writer w = file.openWriter()) {
+                String raw = String.join("\n", commands);
+                w.write(raw);
+                w.flush();
+                w.close();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return true;
+    }
+
+    private boolean processCommandAnnotations(RoundEnvironment roundEnv) {
+        Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(Command.class);
+        if (elements.size() == 0) {
+            return false;
+        }
+
+        List<String> commands = new ArrayList<>();
+        for (Element element : elements) {
+            if (!(element instanceof TypeElement providerClass)) {
+                error("Target must be a class");
+                return false;
+            }
+
+            commands.add(providerClass.getQualifiedName().toString());
+        }
+
+        try {
+            FileObject file = this.processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, "", "commands.txt");
+            try (Writer w = file.openWriter()) {
+                String raw = String.join("\n", commands);
+                w.write(raw);
+                w.flush();
+                w.close();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return true;
     }
 
     private boolean processI18nAnnotations(RoundEnvironment roundEnv) {
@@ -45,7 +114,7 @@ public class CraftingAnnotationProcessor extends AbstractProcessor {
         }
 
         Map<String, String> translations = new HashMap<>();
-        Map<String, Map<String, String>> parameters = new HashMap<>();
+        Map<String, List<Map.Entry<String, String>>> parameters = new HashMap<>();
 
         for (Element type : providerClass.getEnclosedElements()) {
             if (type.getKind() != ElementKind.METHOD) {
@@ -63,7 +132,7 @@ public class CraftingAnnotationProcessor extends AbstractProcessor {
                 return false;
             }
 
-            Map<String, String> methodParameters = new HashMap<>();
+            List<Map.Entry<String, String>> methodParameters = new ArrayList<>();
             for (VariableElement parameter : method.getParameters()) {
                 String paramType;
                 switch (parameter.asType().toString()) {
@@ -74,7 +143,7 @@ public class CraftingAnnotationProcessor extends AbstractProcessor {
                         return false;
                     }
                 }
-                methodParameters.put(parameter.getSimpleName().toString(), paramType);
+                methodParameters.add(new AbstractMap.SimpleEntry<>(parameter.getSimpleName().toString(), paramType));
             }
 
             String def = type.getAnnotation(I18nDef.class).def();
@@ -133,7 +202,7 @@ public class CraftingAnnotationProcessor extends AbstractProcessor {
                     out.print(implementation.getKey());
                     out.print("(");
 
-                    List<String> paramTypes = parameters.get(implementation.getKey()).entrySet().stream()
+                    List<String> paramTypes = parameters.get(implementation.getKey()).stream()
                             .map(el -> el.getValue() + " " + el.getKey()).toList();
                     out.print(String.join(", ", paramTypes));
 
@@ -142,7 +211,7 @@ public class CraftingAnnotationProcessor extends AbstractProcessor {
                     out.print(implementation.getKey());
                     out.println("\");");
 
-                    for (Map.Entry<String, String> parameter : parameters.get(implementation.getKey()).entrySet()) {
+                    for (Map.Entry<String, String> parameter : parameters.get(implementation.getKey())) {
                         String replaceMethod;
                         switch (parameter.getValue()) {
                             case "String" -> replaceMethod = "replaceString";

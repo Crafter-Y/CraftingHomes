@@ -1,5 +1,6 @@
 package de.craftery.craftinghomes.common;
 
+import de.craftery.craftinghomes.common.storage.AbstractDataModel;
 import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
@@ -15,11 +16,12 @@ import java.util.stream.Collectors;
 // (https://github.com/RedstoneTools/redstonetools-mod)
 public class ReflectionUtil {
     private static Set<? extends AbstractCommand> commands;
+    private static Set<? extends AbstractDataModel> dataModels;
 
     public static Set<? extends AbstractCommand> getCommands() {
         if (commands == null) {
             try {
-                commands = serviceLoad(AbstractCommand.class);
+                commands = discoverAndInstantiateClasses("commands.txt", AbstractCommand.class);
             } catch (IOException e) {
                 throw new RuntimeException("Failed to load features", e);
             }
@@ -27,12 +29,23 @@ public class ReflectionUtil {
         return commands;
     }
 
-    private static <T> Set<? extends T> serviceLoad(Class<T> clazz) throws IOException {
+    public static Set<? extends AbstractDataModel> getDataModels() {
+        if (dataModels == null) {
+            try {
+                dataModels = discoverAndInstantiateClasses("datasources.txt", AbstractDataModel.class);
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to load features", e);
+            }
+        }
+        return dataModels;
+    }
+
+    private static <T> Set<? extends T> discoverAndInstantiateClasses(String discoverFile, Class<T> clazz) throws IOException {
         ClassLoader cl = ReflectionUtil.class.getClassLoader();
-        Enumeration<URL> serviceFiles = cl.getResources("META-INF/services/" + clazz.getName());
+        Enumeration<URL> commandsFile = cl.getResources(discoverFile);
         Set<String> classNames = new HashSet<>();
-        while (serviceFiles.hasMoreElements()) {
-            URL serviceFile = serviceFiles.nextElement();
+        if (commandsFile.hasMoreElements()) {
+            URL serviceFile = commandsFile.nextElement();
             try (InputStream reader = serviceFile.openStream()) {
                 classNames.addAll(IOUtils.readLines(reader, "UTF-8"));
             }
@@ -53,16 +66,15 @@ public class ReflectionUtil {
                 .collect(Collectors.toSet());
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "unused"})
     private static <T> @Nullable Class<? extends T> loadClass(String className) {
         try {
             return (Class<? extends T>) Class.forName(className);
         } catch (ClassNotFoundException e) {
             throw new RuntimeException("Failed to load class " + className, e);
         } catch (NoClassDefFoundError e) {
-            Platform.getServer().log(String.format("Failed to load class {}, required {}", className, e.getMessage()));
+            Platform.getServer().log("Failed to load class "+ className +", required " + e.getMessage());
         }
         return null;
     }
-
 }

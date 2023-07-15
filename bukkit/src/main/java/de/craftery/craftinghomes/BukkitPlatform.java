@@ -4,13 +4,26 @@ import de.craftery.craftinghomes.common.AbstractCommand;
 import de.craftery.craftinghomes.common.Platform;
 import de.craftery.craftinghomes.common.ServerEntry;
 import de.craftery.craftinghomes.common.api.ConfigurationI;
+import de.craftery.craftinghomes.common.api.OfflinePlayerI;
+import de.craftery.craftinghomes.common.api.PlayerI;
+import de.craftery.craftinghomes.common.gui.GuiBuilder;
+import de.craftery.craftinghomes.common.gui.GuiClickCallback;
+import de.craftery.craftinghomes.common.gui.GuiItem;
 import de.craftery.craftinghomes.helper.CommandStub;
 
 import de.craftery.craftinghomes.impl.ConfigrationImpl;
+import de.craftery.craftinghomes.impl.OfflinePlayerImpl;
+import org.bukkit.*;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.logging.Level;
@@ -18,12 +31,19 @@ import java.util.logging.Level;
 public final class BukkitPlatform extends JavaPlugin implements ServerEntry {
     private static BukkitPlatform instance;
 
+    public static NamespacedKey GUI_ITEM_KEY;
+
     private final List<String> commands = new ArrayList<>();
+
+    public final Map<String, GuiClickCallback> guiClickCallbacks = new HashMap<>();
+    public final Set<String> protectedWindowTitles = new HashSet<>();
 
     @Override
     public void onEnable() {
         instance = this;
         Platform.onEnable(this);
+        GUI_ITEM_KEY = new NamespacedKey(this, "gui_item");
+        this.getServer().getPluginManager().registerEvents(new InventoryProtector(), this);
         this.saveDefaultConfig();
     }
 
@@ -73,6 +93,38 @@ public final class BukkitPlatform extends JavaPlugin implements ServerEntry {
     public ConfigurationI getConfiguration(String configFileName) {
         return new ConfigrationImpl(this.getDataFolder(), configFileName);
     }
+
+    @Override
+    public @Nullable OfflinePlayerI getOfflinePlayer(String name) {
+        OfflinePlayer offlinePlayer = Bukkit.getServer().getOfflinePlayer(name);
+        if (!offlinePlayer.hasPlayedBefore()) return null;
+        return new OfflinePlayerImpl(offlinePlayer);
+    }
+
+    @Override
+    public void openGui(PlayerI player, GuiBuilder builder) {
+        String title = ChatColor.translateAlternateColorCodes('&', builder.getTitle());
+        Inventory inv = Bukkit.createInventory(null, 9*builder.getRows(), title);
+        protectedWindowTitles.add(title);
+        for (Map.Entry<Integer, GuiItem> item : builder.getSlots().entrySet()) {
+            ItemStack invItem = new ItemStack(Material.PAPER);
+            //TODO: Use player heads for this
+
+            ItemMeta meta = invItem.getItemMeta();
+            meta.setLore(item.getValue().lores().stream().map(s -> ChatColor.translateAlternateColorCodes('&', s)).toList());
+            meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', item.getValue().name()));
+            meta.getPersistentDataContainer().set(GUI_ITEM_KEY, PersistentDataType.STRING, item.getValue().identifier());
+            invItem.setItemMeta(meta);
+            this.guiClickCallbacks.put(item.getValue().identifier(), item.getValue().callback());
+
+            inv.setItem(item.getKey(), invItem);
+        }
+
+        Player p = Bukkit.getPlayer(UUID.fromString(player.getUniqueId()));
+        if (p == null) return;
+        p.openInventory(inv);
+    }
+
 
     public static BukkitPlatform getInstance() {
         return instance;

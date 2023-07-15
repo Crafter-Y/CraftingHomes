@@ -3,6 +3,18 @@ plugins {
     id("craftinghomes.java")
 }
 
+sourceSets {
+    craftinghomes {
+        java {
+            srcDir("src/main/java")
+        }
+    }
+}
+
+configurations {
+    craftinghomesShadow.extendsFrom(shadow)
+}
+
 repositories {
     maven {
         name = "papermc-repo"
@@ -11,28 +23,36 @@ repositories {
 }
 
 dependencies {
-    compileOnly "io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT"
-    annotationProcessor implementation("com.google.auto.service:auto-service:1.1.0")
-    shadow(project(":craftinghomes"))
+    compileOnly("io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT")
+
+    craftinghomesShadow(project(":craftinghomes"))
     shadow(project(":common"))
 }
 
 tasks {
-    shadowJar {
-        archiveFileName.set("CraftingHomes-bukkit-v${version}-1.8.8-${findProperty('latestMinecraftVersion')}.jar")
-        destinationDirectory = file("$rootDir/build")
+    build {
+        dependsOn("buildCraftinghomes")
     }
+    runServer {
+        dependsOn("build")
+    }
+    runPaper {
+        disablePluginJarDetection()
+    }
+}
+
+tasks.register('buildCraftinghomes', com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar) {
+    archiveFileName.set("CraftingHomes-bukkit-v${version}-1.8.8-${findProperty('latestMinecraftVersion')}.jar")
+    destinationDirectory = file("$rootDir/build")
+
+    description = "Build craftinghomes"
+    group = "build"
+    from sourceSets.main.output
+    configurations = [project.configurations.craftinghomesShadow, project.configurations.shadow]
 }
 
 runServer {
+    dependsOn("buildCraftinghomes")
     minecraftVersion(findProperty('runPaperMinecraftVersion') as String)
-}
-
-processResources {
-    def props = [version: version]
-    inputs.properties props
-    filteringCharset 'UTF-8'
-    filesMatching('plugin.yml') {
-        expand props
-    }
+    pluginJars = files("$rootDir/build/CraftingHomes-bukkit-v${project.version}-1.8.8-${findProperty('latestMinecraftVersion') as String}.jar")
 }

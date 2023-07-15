@@ -47,6 +47,11 @@ public class ConfigrationImpl implements ConfigurationI {
     }
 
     @Override
+    public String getString(String path) {
+        return this.config.getString(path);
+    }
+
+    @Override
     public String getString(String path, String def) {
         return this.config.getString(path, def);
     }
@@ -54,6 +59,11 @@ public class ConfigrationImpl implements ConfigurationI {
     @Override
     public double getDouble(String path) {
         return this.config.getDouble(path);
+    }
+
+    @Override
+    public long getLong(String path) {
+        return this.config.getLong(path);
     }
 
     @Override
@@ -80,6 +90,10 @@ public class ConfigrationImpl implements ConfigurationI {
 
     @Override
     public void addDefault(String path, Object value) {
+        if (this.config.get(path) == null) {
+            this.config.set(path, value);
+        }
+
         this.config.addDefault(path, value);
     }
 
