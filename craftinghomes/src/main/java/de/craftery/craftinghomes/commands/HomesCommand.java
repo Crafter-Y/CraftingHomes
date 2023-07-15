@@ -21,6 +21,9 @@ public class HomesCommand extends AbstractCommand {
     @Argument(required = false)
     private String targetPlayer;
 
+    @Argument(required = false)
+    private String targetHome;
+
     @Override
     public boolean onCommand(CommandSenderI sender) {
         List<Home> homes;
@@ -65,12 +68,29 @@ public class HomesCommand extends AbstractCommand {
                 sender.sendMessage(this.i18n.noPermission());
                 return true;
             }
-
             OfflinePlayerI player = Platform.getServer().getOfflinePlayer(targetPlayer);
             if (player == null) {
                 sender.sendMessage(this.i18n.playerNeverOnline(targetPlayer));
                 return true;
             }
+
+            if (targetHome != null) {
+                if (!(sender instanceof PlayerI origin)) {
+                    sender.sendMessage(this.i18n.senderNotPlayer());
+                    return true;
+                }
+
+                Home home = Home.getPlayerHome(player.getUniqueId(), targetHome);
+                if (home == null) {
+                    origin.sendMessage(this.i18n.homeNotExisting(targetHome));
+                    return true;
+                }
+
+                origin.teleport(home.getLocation());
+                origin.sendMessage(this.i18n.teleportedToOthersHome(player.getName(), targetHome));
+                return true;
+            }
+
             homes = Home.getByField("uuid", player.getUniqueId());
 
             if (homes.isEmpty()) {
@@ -110,6 +130,11 @@ public class HomesCommand extends AbstractCommand {
     public List<String> onTabComplete(CommandSenderI sender, int argLength) {
         if (argLength == 1 && sender.hasPermission("craftinghomes.homes.other")) {
             return null;
+        }
+        if (argLength == 2 && sender.hasPermission("craftinghomes.homes.other")) {
+            OfflinePlayerI player = Platform.getServer().getOfflinePlayer(targetPlayer);
+            if (player == null) return new ArrayList<>();
+            return Home.getByField("uuid", player.getUniqueId()).stream().map(Home::getName).toList();
         }
         return new ArrayList<>();
     }

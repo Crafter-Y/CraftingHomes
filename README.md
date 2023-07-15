@@ -2,6 +2,9 @@
 
 A simple Home plugin.
 
+[![CodeQL](https://github.com/Crafter-Y/CraftingHomes/actions/workflows/codeql.yml/badge.svg)](https://github.com/Crafter-Y/CraftingHomes/actions/workflows/codeql.yml)
+[![Java CI with Gradle](https://github.com/Crafter-Y/CraftingHomes/actions/workflows/gradle.yml/badge.svg)](https://github.com/Crafter-Y/CraftingHomes/actions/workflows/gradle.yml)
+
 By itself, this is supposed to be a simple Home 
 plugin (for now) that has the basic commands `/home`, `/homes`,
 `/sethome`, `/delhome` and 3 Homes per player.
@@ -31,7 +34,7 @@ Everything else is just to make it work.
 - [x] reflection to discover and set command arguments
 - [x] gui for /homes
 - [x] /homes <player> for admins with permission
-- [ ] /homes <player> <home> for admins with permission
+- [x] /homes <player> <home> for admins with permission
 - [x] data storage templating
 - [ ] other implementations like fabric or forge (once feature complete)
 - [ ] more ci tests
