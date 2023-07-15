@@ -29,7 +29,7 @@ Everything else is just to make it work.
 - [x] abstract command definition syntax (with annotations)
 - [x] configurable i18n
 - [x] reflection to discover and set command arguments
-- [ ] gui for /homes
+- [x] gui for /homes
 - [x] /homes <player> for admins with permission
 - [ ] /homes <player> <home> for admins with permission
 - [x] data storage templating

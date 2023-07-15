@@ -90,6 +90,10 @@ public class ConfigrationImpl implements ConfigurationI {
 
     @Override
     public void addDefault(String path, Object value) {
+        if (this.config.get(path) == null) {
+            this.config.set(path, value);
+        }
+
         this.config.addDefault(path, value);
     }
 

@@ -29,5 +29,15 @@ public interface Messages {
     String playerNeverOnline(String player);
     @I18nDef(def = "&cYou dont have permission to use this command!")
     String noPermission();
+    @I18nDef(def = "&aYour Homes")
+    String homeTitle();
+    @I18nDef(def = "&aX=&7${x} &aY=&7${y} &aZ=&7${z}")
+    String positionLore(Integer x, Integer y, Integer z);
+    @I18nDef(def = "&aWorld=&7${world}")
+    String worldLore(String world);
+    @I18nDef(def = "&a${playerName}'s homes")
+    String otherPlayersHome(String playerName);
+    @I18nDef(def = "&aYou have been teleported to ${targetName}'s home &b${homeName}&a!")
+    String teleportedToOthersHome(String targetName, String homeName);
 
 }

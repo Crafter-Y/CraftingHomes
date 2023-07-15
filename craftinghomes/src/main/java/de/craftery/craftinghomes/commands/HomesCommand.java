@@ -8,6 +8,9 @@ import de.craftery.craftinghomes.common.Platform;
 import de.craftery.craftinghomes.common.api.CommandSenderI;
 import de.craftery.craftinghomes.common.api.OfflinePlayerI;
 import de.craftery.craftinghomes.common.api.PlayerI;
+import de.craftery.craftinghomes.common.gui.GuiBuilder;
+import de.craftery.craftinghomes.common.gui.GuiItem;
+import de.craftery.craftinghomes.common.gui.GuiItemType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,8 +37,29 @@ public class HomesCommand extends AbstractCommand {
                 return true;
             }
 
-            String homeNames = String.join(", ", homes.stream().map(Home::getName).toList());
-            sender.sendMessage(this.i18n.yourHomes(homeNames));
+            if (homes.size() > 9*6) {
+                String homeNames = String.join(", ", homes.stream().map(Home::getName).toList());
+                sender.sendMessage(this.i18n.yourHomes(homeNames));
+                return true;
+            }
+
+            GuiBuilder gui = new GuiBuilder(this.i18n.homeTitle(), 6);
+            for (Home home : homes) {
+                GuiItemType type = GuiItemType.OVERWORLD;
+                if (home.getWorld().endsWith("_nether")) type = GuiItemType.NETHER;
+                if (home.getWorld().endsWith("_the_end")) type = GuiItemType.END;
+
+                List<String> lores = new ArrayList<>();
+                lores.add(this.i18n.positionLore(home.getX().intValue(), home.getY().intValue(), home.getZ().intValue()));
+                lores.add(this.i18n.worldLore(home.getWorld()));
+
+                gui.addSlot(new GuiItem(type, "&a" + home.getName(), lores, player.getUniqueId() + home.getName(), () -> {
+                    player.teleport(home.getLocation());
+                    player.sendMessage(this.i18n.teleportedToHome(home.getName()));
+                }));
+            }
+            gui.open(player);
+
         } else {
             if (!sender.hasPermission("craftinghomes.homes.other")) {
                 sender.sendMessage(this.i18n.noPermission());
@@ -54,8 +78,29 @@ public class HomesCommand extends AbstractCommand {
                 return true;
             }
 
-            String homeNames = String.join(", ", homes.stream().map(Home::getName).toList());
-            sender.sendMessage(this.i18n.playerHomes(player.getName(), homeNames));
+            if (homes.size() > 9*6 || !(sender instanceof PlayerI origin)) {
+                String homeNames = String.join(", ", homes.stream().map(Home::getName).toList());
+                sender.sendMessage(this.i18n.playerHomes(player.getName(), homeNames));
+                return true;
+            }
+
+            GuiBuilder gui = new GuiBuilder(this.i18n.otherPlayersHome(player.getName()), 6);
+            for (Home home : homes) {
+                GuiItemType type = GuiItemType.OVERWORLD;
+                if (home.getWorld().endsWith("_nether")) type = GuiItemType.NETHER;
+                if (home.getWorld().endsWith("_the_end")) type = GuiItemType.END;
+
+                List<String> lores = new ArrayList<>();
+                lores.add(this.i18n.positionLore(home.getX().intValue(), home.getY().intValue(), home.getZ().intValue()));
+                lores.add(this.i18n.worldLore(home.getWorld()));
+
+                gui.addSlot(new GuiItem(type, "&a" + home.getName(), lores, player.getUniqueId() + home.getName(), () -> {
+                    origin.teleport(home.getLocation());
+                    origin.sendMessage(this.i18n.teleportedToOthersHome(player.getName(), home.getName()));
+                }));
+            }
+            gui.open(origin);
+
         }
 
         return true;
