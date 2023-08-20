@@ -1,5 +1,13 @@
 pluginManagement {
     includeBuild('build-logic')
+
+    repositories {
+        maven {
+            name = 'Fabric'
+            url = 'https://maven.fabricmc.net/'
+        }
+        gradlePluginPortal()
+    }
 }
 
 rootProject.name = 'CraftingHomes'
@@ -8,3 +16,4 @@ include ":bukkit"
 include ":common"
 include ":craftinghomes"
 include ":annotations"
+include ":fabric"

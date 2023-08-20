@@ -29,6 +29,21 @@ public abstract class AbstractCommand {
         this.i18n = i18n;
     }
 
+    public List<Argument> getArguments() {
+        List<Argument> arguments = new ArrayList<>();
+
+        for (Field field : this.getClass().getDeclaredFields()) {
+            Argument argument = field.getAnnotation(Argument.class);
+            if (argument == null) continue;
+            if (!field.getType().toString().equals("class java.lang.String")) {
+                throw new RuntimeException("Every field annotated with @Argument must be of type String.");
+            }
+            arguments.add(argument);
+        }
+
+        return arguments;
+    }
+
     private boolean setFields(CommandSenderI sender, String[] args) {
         int argIndex = 0;
         for (Field field : this.getClass().getDeclaredFields()) {
@@ -67,7 +82,7 @@ public abstract class AbstractCommand {
         return this.onCommand(sender);
     }
 
-    public abstract boolean onCommand(CommandSenderI sender);
+    protected abstract boolean onCommand(CommandSenderI sender);
     public List<String> onTabComplete(CommandSenderI sender, String[] args) {
         boolean succeed = setFields(sender, args);
         if (!succeed) return new ArrayList<>();

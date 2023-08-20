@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "id": "craftinghomes",
+  "version": "${version}",
+  "name": "CraftingHomes",
+  "authors": [
+    "Crafter_Y"
+  ],
+  "environment": "server",
+  "entrypoints": {
+    "main": [
+      "de.craftery.craftinghomes.CraftingHomesMod"
+    ]
+  },
+  "mixins": [
+    {
+      "config": "craftinghomes.mixins.json",
+      "environment": "server"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=0.14.21",
+    "minecraft": "~1.20.1",
+    "java": ">=17",
+    "fabric-api": "*"
+  }
+}

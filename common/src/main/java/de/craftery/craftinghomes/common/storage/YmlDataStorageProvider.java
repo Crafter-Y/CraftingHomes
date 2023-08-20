@@ -14,6 +14,7 @@ public class YmlDataStorageProvider implements DataStorageProvider {
 
     public YmlDataStorageProvider() {
         configuration = Platform.getServer().getConfiguration("database.yml");
+        configuration.saveConfig();
     }
 
     @Override
@@ -59,7 +60,7 @@ public class YmlDataStorageProvider implements DataStorageProvider {
             case STRING -> configuration.getString(path);
             case DOUBLE -> configuration.getDouble(path);
             case LONG -> configuration.getLong(path);
-            case FLOAT -> (float) configuration.getDouble(path);
+            case FLOAT -> configuration.getFloat(path);
         };
     }
 
@@ -68,8 +69,8 @@ public class YmlDataStorageProvider implements DataStorageProvider {
         if (fields.get(field) == null) {
             throw new RuntimeException("Field " + field + " does not exist in " + qualifiedName);
         }
-        if (!configuration.exists(qualifiedName)) return new ArrayList<>();
 
+        if (!configuration.exists(qualifiedName)) return new ArrayList<>();
 
         List<T> result = new ArrayList<>();
         for (String entry : configuration.getKeys(qualifiedName)) {
@@ -83,9 +84,9 @@ public class YmlDataStorageProvider implements DataStorageProvider {
                 T instance = clazz.getDeclaredConstructor().newInstance();
                 instance.setId(Long.parseLong(entry));
                 for (Map.Entry<String, FieldType> requestedFields : fields.entrySet()) {
-                    instance.setField(requestedFields.getKey(), getField(row + "." + requestedFields.getKey(), requestedFields.getValue()));
+                    Object fieldValue = getField(row + "." + requestedFields.getKey(), requestedFields.getValue());
+                    instance.setField(requestedFields.getKey(), fieldValue);
                 }
-
                 result.add(instance);
             } catch (InvocationTargetException | InstantiationException | IllegalAccessException | NoSuchMethodException e) {
                 throw new RuntimeException("Could not create instance of " + clazz.getSimpleName(), e);
@@ -97,7 +98,7 @@ public class YmlDataStorageProvider implements DataStorageProvider {
 
     @Override
     public void delete(String qualifiedName, long id) {
-        configuration.set(qualifiedName + "." + id, null);
+        configuration.delete(qualifiedName + "." + id);
         configuration.saveConfig();
     }
 }

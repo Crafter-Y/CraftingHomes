@@ -19,6 +19,9 @@ public class Platform {
         server = entry;
         server.log("Plugin is starting up!");
 
+        server.log("Preloading config");
+        Platform.getServer().getConfiguration().saveConfig();
+
         server.log("Registering i18n!");
         i18n.register();
 
