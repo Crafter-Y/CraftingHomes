@@ -13,7 +13,7 @@ plugin (for now) that has the basic commands `/home`, `/homes`,
 
 | Platform                     | Version(s)   | Dependencies                                                                 |
 |------------------------------|--------------|------------------------------------------------------------------------------|
-| Bukkit (Spigot, Paper, etc.) | 1.8.8-1.20-2 | none                                                                         |
+| Bukkit (Spigot, Paper, etc.) | 1.8.8-1.20.2 | none                                                                         |
 | Fabric                       | 1.20.1       | [sgui  1.2.2+1.20](https://github.com/Patbox/sgui/releases/tag/1.2.2%2B1.20) |
 
 Platform or version missing? Just create an issue.
@@ -33,6 +33,8 @@ You can add your own language by creating a new file your_language.lang.yml
 I know that I over-complicated many things, but this is a kind of exercise for me.
 You may look at the `craftinghomes` subproject that contains the whole logic. 
 Everything else is just to make it work.
+
+[![Logic Diagram](./.github/media/craftinghomeslogic.png)](https://github.com/Crafter-Y/CraftingHomes)
 
 ## Roadmap
 - [x] Persistent Data Storage
