@@ -44,12 +44,12 @@ java {
     sourceCompatibility = javaVersion
     targetCompatibility = javaVersion
     if (JavaVersion.current() < javaVersion) {
-        toolchain.languageVersion = JavaLanguageVersion.of(17)
+        toolchain.languageVersion = JavaLanguageVersion.of(11)
     }
 }
 
 tasks.withType(JavaCompile).configureEach {
     if (JavaVersion.current().isJava10Compatible()) {
-        //options.release = 17
+        options.release = 8
     }
 }

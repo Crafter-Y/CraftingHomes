@@ -51,7 +51,7 @@ public class ReflectionUtil {
             }
         }
         return classNames.stream()
-                .filter(it -> !it.isEmpty() && !it.isBlank())
+                .filter(it -> !it.isEmpty()) // .filter(it -> !it.isEmpty() && !it.isBlank())
                 .map(ReflectionUtil::loadClass)
                 .filter(Objects::nonNull)
                 .filter(clazz::isAssignableFrom)

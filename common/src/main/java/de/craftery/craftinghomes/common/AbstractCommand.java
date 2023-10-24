@@ -63,10 +63,10 @@ public abstract class AbstractCommand {
             }
 
             try {
-                boolean accessible = field.canAccess(this);
+                //boolean accessible = field.canAccess(this);
                 field.setAccessible(true);
                 field.set(this, value);
-                field.setAccessible(accessible);
+                //field.setAccessible(accessible);
             } catch (IllegalAccessException e) {
                 throw new RuntimeException(e);
             }

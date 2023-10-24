@@ -42,10 +42,10 @@ public abstract class AbstractDataModel {
     private Object getField(String field) {
         try {
             Field f = this.getClass().getDeclaredField(field);
-            boolean accessible = f.canAccess(this);
+            //boolean accessible = f.canAccess(this);
             f.setAccessible(true);
             Object value = f.get(this);
-            f.setAccessible(accessible);
+            //f.setAccessible(accessible);
 
             if (value == null) {
                 throw new RuntimeException("Field " + field + " is null. Fields cannot be null for now.");
@@ -59,10 +59,10 @@ public abstract class AbstractDataModel {
     public void setField(String field, Object value) {
         try {
             Field f = this.getClass().getDeclaredField(field);
-            boolean accessible = f.canAccess(this);
+            //boolean accessible = f.canAccess(this);
             f.setAccessible(true);
             f.set(this, value);
-            f.setAccessible(accessible);
+            //f.setAccessible(accessible);
         } catch (NoSuchFieldException | IllegalAccessException e) {
             throw new RuntimeException("Could not set field " + field + " from " + this.getClass().getSimpleName(), e);
         }
