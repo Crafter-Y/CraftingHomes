@@ -14,6 +14,7 @@ import de.craftery.craftinghomes.common.gui.GuiItemType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Command(name = "homes")
 @SuppressWarnings("unused")
@@ -29,10 +30,12 @@ public class HomesCommand extends AbstractCommand {
         List<Home> homes;
 
         if (targetPlayer == null) {
-            if (!(sender instanceof PlayerI player)) {
+            if (!(sender instanceof PlayerI)) {
                 sender.sendMessage(this.i18n.senderNotPlayer());
                 return true;
             }
+            PlayerI player = (PlayerI) sender;
+
             homes = Home.getByPlayer(player);
 
             if (homes.isEmpty()) {
@@ -41,7 +44,7 @@ public class HomesCommand extends AbstractCommand {
             }
 
             if (homes.size() > 9*6) {
-                String homeNames = String.join(", ", homes.stream().map(Home::getName).toList());
+                String homeNames = homes.stream().map(Home::getName).collect(Collectors.joining(", "));
                 sender.sendMessage(this.i18n.yourHomes(homeNames));
                 return true;
             }
@@ -75,10 +78,11 @@ public class HomesCommand extends AbstractCommand {
             }
 
             if (targetHome != null) {
-                if (!(sender instanceof PlayerI origin)) {
+                if (!(sender instanceof PlayerI)) {
                     sender.sendMessage(this.i18n.senderNotPlayer());
                     return true;
                 }
+                PlayerI origin = (PlayerI) sender;
 
                 Home home = Home.getPlayerHome(player.getUniqueId(), targetHome);
                 if (home == null) {
@@ -98,11 +102,12 @@ public class HomesCommand extends AbstractCommand {
                 return true;
             }
 
-            if (homes.size() > 9*6 || !(sender instanceof PlayerI origin)) {
-                String homeNames = String.join(", ", homes.stream().map(Home::getName).toList());
+            if (homes.size() > 9*6 || !(sender instanceof PlayerI)) {
+                String homeNames = homes.stream().map(Home::getName).collect(Collectors.joining(", "));
                 sender.sendMessage(this.i18n.playerHomes(player.getName(), homeNames));
                 return true;
             }
+            PlayerI origin = (PlayerI) sender;
 
             GuiBuilder gui = new GuiBuilder(this.i18n.otherPlayersHome(player.getName()), 6);
             for (Home home : homes) {
@@ -134,7 +139,7 @@ public class HomesCommand extends AbstractCommand {
         if (argLength == 2 && sender.hasPermission("craftinghomes.homes.other")) {
             OfflinePlayerI player = Platform.getServer().getOfflinePlayer(targetPlayer);
             if (player == null) return new ArrayList<>();
-            return Home.getByField("uuid", player.getUniqueId()).stream().map(Home::getName).toList();
+            return Home.getByField("uuid", player.getUniqueId()).stream().map(Home::getName).collect(Collectors.toList());
         }
         return new ArrayList<>();
     }

@@ -40,10 +40,10 @@ public class YmlDataStorageProvider implements DataStorageProvider {
         for (Map.Entry<String, Map.Entry<FieldType, Object>> field : saveObject.entrySet()) {
             String path = qualifiedName + "." + id + "." + field.getKey();
             switch (field.getValue().getKey()) {
-                case STRING -> configuration.set(path, (String) field.getValue().getValue());
-                case DOUBLE -> configuration.set(path, (Double) field.getValue().getValue());
-                case LONG -> configuration.set(path, (Long) field.getValue().getValue());
-                case FLOAT -> configuration.set(path, (Float) field.getValue().getValue());
+                case STRING: { configuration.set(path, (String) field.getValue().getValue()); break; }
+                case DOUBLE: { configuration.set(path, (Double) field.getValue().getValue()); break; }
+                case LONG: { configuration.set(path, (Long) field.getValue().getValue()); break; }
+                case FLOAT: { configuration.set(path, (Float) field.getValue().getValue()); break; }
             }
         }
         configuration.saveConfig();
@@ -56,12 +56,14 @@ public class YmlDataStorageProvider implements DataStorageProvider {
     }
 
     private @Nullable Object getField(String path, FieldType type) {
-        return switch (type) {
-            case STRING -> configuration.getString(path);
-            case DOUBLE -> configuration.getDouble(path);
-            case LONG -> configuration.getLong(path);
-            case FLOAT -> configuration.getFloat(path);
+        Object toType = null;
+        switch (type) {
+            case STRING: { toType = configuration.getString(path); break; }
+            case DOUBLE: { toType = configuration.getDouble(path); break; }
+            case LONG: { toType = configuration.getLong(path); break; }
+            case FLOAT: { toType = configuration.getFloat(path); break; }
         };
+        return toType;
     }
 
     @Override

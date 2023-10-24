@@ -19,9 +19,10 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @SupportedAnnotationTypes("de.craftery.craftinghomes.annotation.annotations.*")
-@SupportedSourceVersion(SourceVersion.RELEASE_17)
+@SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class CraftingAnnotationProcessor extends AbstractProcessor {
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
@@ -38,10 +39,11 @@ public class CraftingAnnotationProcessor extends AbstractProcessor {
         }
         List<String> commands = new ArrayList<>();
         for (Element element : elements) {
-            if (!(element instanceof TypeElement providerClass)) {
+            if (!(element instanceof TypeElement)) {
                 error("Target must be a class");
                 return false;
             }
+            TypeElement providerClass = (TypeElement) element;
 
             commands.add(providerClass.getQualifiedName().toString());
         }
@@ -69,10 +71,11 @@ public class CraftingAnnotationProcessor extends AbstractProcessor {
 
         List<String> commands = new ArrayList<>();
         for (Element element : elements) {
-            if (!(element instanceof TypeElement providerClass)) {
+            if (!(element instanceof TypeElement)) {
                 error("Target must be a class");
                 return false;
             }
+            TypeElement providerClass = (TypeElement) element;
 
             commands.add(providerClass.getQualifiedName().toString());
         }
@@ -103,10 +106,11 @@ public class CraftingAnnotationProcessor extends AbstractProcessor {
         }
 
         Element providerElement = elements.iterator().next();
-        if (!(providerElement instanceof TypeElement providerClass)) {
+        if (!(providerElement instanceof TypeElement)) {
             error("Entry element must be a interface!");
             return false;
         }
+        TypeElement providerClass = (TypeElement) providerElement;
 
         if (providerClass.getKind() != ElementKind.INTERFACE) {
             error("Entry element must be a interface!");
@@ -136,9 +140,9 @@ public class CraftingAnnotationProcessor extends AbstractProcessor {
             for (VariableElement parameter : method.getParameters()) {
                 String paramType;
                 switch (parameter.asType().toString()) {
-                    case "java.lang.String" -> paramType = "String";
-                    case "java.lang.Integer" -> paramType = "Integer";
-                    default -> {
+                    case "java.lang.String": { paramType = "String"; break;}
+                    case "java.lang.Integer": { paramType = "Integer"; break;}
+                    default: {
                         error("Unimplemented parameter type: " + parameter.asType().toString() + " in method " + method.getSimpleName().toString());
                         return false;
                     }
@@ -203,7 +207,7 @@ public class CraftingAnnotationProcessor extends AbstractProcessor {
                     out.print("(");
 
                     List<String> paramTypes = parameters.get(implementation.getKey()).stream()
-                            .map(el -> el.getValue() + " " + el.getKey()).toList();
+                            .map(el -> el.getValue() + " " + el.getKey()).collect(Collectors.toList());
                     out.print(String.join(", ", paramTypes));
 
                     out.println(") {");
@@ -214,9 +218,9 @@ public class CraftingAnnotationProcessor extends AbstractProcessor {
                     for (Map.Entry<String, String> parameter : parameters.get(implementation.getKey())) {
                         String replaceMethod;
                         switch (parameter.getValue()) {
-                            case "String" -> replaceMethod = "replaceString";
-                            case "Integer" -> replaceMethod = "replaceInteger";
-                            default -> {
+                            case "String": { replaceMethod = "replaceString"; break; }
+                            case "Integer": { replaceMethod = "replaceInteger"; break;}
+                            default: {
                                 error("Unimplemented parameter type: " + parameter.getValue());
                                 return false;
                             }

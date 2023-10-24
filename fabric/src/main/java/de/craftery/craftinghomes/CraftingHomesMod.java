@@ -1,5 +1,6 @@
 package de.craftery.craftinghomes;
 
+import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
@@ -13,10 +14,13 @@ import de.craftery.craftinghomes.common.gui.GuiBuilder;
 import de.craftery.craftinghomes.impl.FabricCommandSenderImpl;
 import de.craftery.craftinghomes.impl.FabricConfigurationImpl;
 import de.craftery.craftinghomes.impl.FabricPlayerImpl;
+import de.craftery.craftinghomes.impl.OfflinePlayerImpl;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.util.UserCache;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,11 +31,13 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 public class CraftingHomesMod implements ModInitializer, ServerEntry {
     public static final Logger LOGGER = LoggerFactory.getLogger("craftinghomes");
+
+    private static MinecraftServer server;
 
     private Path workingDir;
 
@@ -61,8 +67,10 @@ public class CraftingHomesMod implements ModInitializer, ServerEntry {
     public void registerCommand(AbstractCommand command) {
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
             LiteralArgumentBuilder<ServerCommandSource> builder = literal(command.getName());
-
-            builder.executes(context -> callCommand(command, context.getSource(), new String[0]));
+            builder.executes(context -> {
+                server = context.getSource().getServer();
+                return callCommand(command, context.getSource(), new String[0]);
+            });
 
             if (command.getArguments().size() > 0) {
                 dispatcher.register(builder.then(buildLiteral(0, builder, command)));
@@ -93,19 +101,19 @@ public class CraftingHomesMod implements ModInitializer, ServerEntry {
     private <T extends ArgumentBuilder<ServerCommandSource, ?>> T buildLiteral (int index, T builder, AbstractCommand command) {
         RequiredArgumentBuilder<ServerCommandSource, String> arg = argument(Integer.toString(index), StringArgumentType.word())
                 .executes(context -> {
+                    server = context.getSource().getServer();
                     String[] args = new String[index + 1];
                     for (int i = 0; i <= index; i++) {
                         args[i] = context.getArgument(Integer.toString(i), String.class);
                     }
                     return callCommand(command, context.getSource(), args);
                 }).suggests((context, builder1) -> {
+                    server = context.getSource().getServer();
                     String[] args = new String[index + 1];
                     for (int i = 0; i < index; i++) {
                         args[i] = context.getArgument(Integer.toString(i), String.class);
                     }
-
-                    System.out.println("args: " + Arrays.toString(args));
-                    // TODO: fix tab completion
+                    // TODO: fix tab completion (the already written part of the current argument is missing)
 
                     List<String> suggestions = callTabCompleter(command, context.getSource(), args);
                     if (suggestions != null) suggestions.forEach(builder1::suggest);
@@ -129,12 +137,22 @@ public class CraftingHomesMod implements ModInitializer, ServerEntry {
 
     @Override
     public @Nullable OfflinePlayerI getOfflinePlayer(String name) {
-        // https://www.curseforge.com/minecraft/mc-mods/namefabric/files/4651876
-        throw new UnsupportedOperationException("Not implemented");
+        if (name == null || name.isEmpty()) return null;
+        if (server == null) return null;
+        UserCache cache = server.getUserCache();
+        if (cache == null) return null;
+        Optional<GameProfile> optional = cache.findByName(name);
+        if (optional.isPresent()) {
+            GameProfile profile = optional.get();
+            return new OfflinePlayerImpl(profile.getId().toString(), profile.getName());
+        } else {
+            return null;
+        }
     }
 
     @Override
     public void openGui(PlayerI player, GuiBuilder builder) {
+        System.out.println("openGui"  + builder);
         throw new UnsupportedOperationException("Not implemented");
     }
 }

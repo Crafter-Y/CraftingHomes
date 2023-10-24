@@ -9,18 +9,21 @@ import java.util.List;
 public abstract class PlayerOnlyCommand extends AbstractCommand {
     @Override
     public boolean onCommand(CommandSenderI sender) {
-        if (!(sender instanceof PlayerI player)) {
+        if (!(sender instanceof PlayerI)) {
             sender.sendMessage(this.i18n.senderNotPlayer());
             return true;
         }
+        PlayerI player = (PlayerI) sender;
         return this.onCommand(player);
     }
 
+
     @Override
     public List<String> onTabComplete(CommandSenderI sender, int argLength) {
-        if (!(sender instanceof PlayerI player)) {
+        if (!(sender instanceof PlayerI)) {
             return new ArrayList<>();
         }
+        PlayerI player = (PlayerI) sender;
         return this.onTabComplete(player, argLength);
     }
 

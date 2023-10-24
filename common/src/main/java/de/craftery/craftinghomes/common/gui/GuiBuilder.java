@@ -3,10 +3,12 @@ package de.craftery.craftinghomes.common.gui;
 import de.craftery.craftinghomes.common.Platform;
 import de.craftery.craftinghomes.common.api.PlayerI;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@ToString
 public class GuiBuilder {
     @Getter
     private final String title;

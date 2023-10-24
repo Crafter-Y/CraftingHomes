@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,12 +27,13 @@ public abstract class AbstractDataModel {
         for (Field field : this.getClass().getDeclaredFields()) {
             if (field.getAnnotation(Column.class) == null) continue;
 
-            FieldType type = switch (field.getType().toString()) {
-                case "class java.lang.String" -> FieldType.STRING;
-                case "class java.lang.Double" -> FieldType.DOUBLE;
-                case "class java.lang.Long" -> FieldType.LONG;
-                case "class java.lang.Float" -> FieldType.FLOAT;
-                default -> throw new RuntimeException("Unsupported field type: " + field.getType());
+            FieldType type;
+            switch (field.getType().toString()) {
+                case "class java.lang.String": { type = FieldType.STRING; break; }
+                case "class java.lang.Double": {type = FieldType.DOUBLE; break; }
+                case "class java.lang.Long": { type = FieldType.LONG; break; }
+                case "class java.lang.Float": { type = FieldType.FLOAT; break; }
+                default: throw new RuntimeException("Unsupported field type: " + field.getType());
             };
             fields.put(field.getName(), type);
         }
@@ -74,7 +76,8 @@ public abstract class AbstractDataModel {
         this.id = Platform.getDataStorageProvider().getNextId(this.qualifiedName);
         Map<String, Map.Entry<FieldType, Object>> saveObject = new HashMap<>();
         for (Map.Entry<String, FieldType> entry : this.fields.entrySet()) {
-            saveObject.put(entry.getKey(), Map.entry(entry.getValue(), this.getField(entry.getKey())));
+            Map.Entry<FieldType, Object> newEntry = new AbstractMap.SimpleEntry<>(entry.getValue(), this.getField(entry.getKey()));
+            saveObject.put(entry.getKey(), newEntry);
         }
         Platform.getDataStorageProvider().save(this.qualifiedName, this.id, saveObject);
 
@@ -88,7 +91,7 @@ public abstract class AbstractDataModel {
 
         Map<String, Map.Entry<FieldType, Object>> saveObject = new HashMap<>();
         for (Map.Entry<String, FieldType> entry : this.fields.entrySet()) {
-            saveObject.put(entry.getKey(), Map.entry(entry.getValue(), this.getField(entry.getKey())));
+            saveObject.put(entry.getKey(), new AbstractMap.SimpleEntry<>(entry.getValue(), this.getField(entry.getKey())));
         }
         Platform.getDataStorageProvider().update(this.qualifiedName, this.id, saveObject);
 
