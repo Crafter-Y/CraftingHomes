@@ -11,15 +11,23 @@ import de.craftery.craftinghomes.common.api.ConfigurationI;
 import de.craftery.craftinghomes.common.api.OfflinePlayerI;
 import de.craftery.craftinghomes.common.api.PlayerI;
 import de.craftery.craftinghomes.common.gui.GuiBuilder;
+import de.craftery.craftinghomes.common.gui.GuiItem;
 import de.craftery.craftinghomes.impl.FabricCommandSenderImpl;
 import de.craftery.craftinghomes.impl.FabricConfigurationImpl;
 import de.craftery.craftinghomes.impl.FabricPlayerImpl;
 import de.craftery.craftinghomes.impl.OfflinePlayerImpl;
+import eu.pb4.sgui.api.elements.GuiElementBuilder;
+import eu.pb4.sgui.api.gui.SimpleGui;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.item.ItemStack;
+import net.minecraft.registry.Registries;
+import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.UserCache;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -32,6 +40,7 @@ import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class CraftingHomesMod implements ModInitializer, ServerEntry {
@@ -152,7 +161,32 @@ public class CraftingHomesMod implements ModInitializer, ServerEntry {
 
     @Override
     public void openGui(PlayerI player, GuiBuilder builder) {
-        System.out.println("openGui"  + builder);
-        throw new UnsupportedOperationException("Not implemented");
+        if (!(player instanceof FabricPlayerImpl impl)) return;
+
+        SimpleGui gui = new SimpleGui(ScreenHandlerType.GENERIC_9X6, impl.getImplPlayer(), false);
+        String title = builder.getTitle().replaceAll("&", "§");
+        gui.setTitle(Text.literal(title));
+        gui.setLockPlayerInventory(true);
+
+        for (Map.Entry<Integer, GuiItem> item : builder.getSlots().entrySet()) {
+            ItemStack itemStack = Registries.ITEM.get(Identifier.tryParse("minecraft:paper")).getDefaultStack();
+            var slot = GuiElementBuilder.from(itemStack);
+
+            String itemName = item.getValue().getName().replaceAll("&", "§");
+            slot.setName(Text.literal(itemName));
+
+            List<String> lores = item.getValue().getLores();
+            List<Text> formattedLores = lores.stream().map(s -> Text.of(s.replaceAll("&", "§"))).toList();
+            slot.setLore(formattedLores);
+
+            slot.setCallback(() -> {
+                gui.close();
+                item.getValue().getCallback().onClick();
+            });
+
+            gui.addSlot(slot);
+        }
+
+        gui.open();
     }
 }

@@ -5,12 +5,17 @@ import de.craftery.craftinghomes.common.api.PlayerI;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 
 public class FabricPlayerImpl extends FabricCommandSenderImpl implements PlayerI {
     public FabricPlayerImpl(ServerCommandSource source) {
         super(source);
+    }
+
+    public ServerPlayerEntity getImplPlayer() {
+        return source.getPlayer();
     }
 
     @Override
