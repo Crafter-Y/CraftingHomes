@@ -49,6 +49,7 @@ shadowJar {
     archiveFileName.set("CraftingHomes-fabric-v${version}-${findProperty('minecraft_version')}.jar")
     destinationDirectory = file("$rootDir/build")
 
+    exclude("plugin.yml")
     configurations = [project.configurations.shadow]
 }
 

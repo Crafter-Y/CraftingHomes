@@ -9,18 +9,12 @@
   "environment": "server",
   "entrypoints": {
     "main": [
-      "de.craftery.craftinghomes.CraftingHomesMod"
+      "de.craftery.craftinghomes.FabricPlatform"
     ]
   },
-  "mixins": [
-    {
-      "config": "craftinghomes.mixins.json",
-      "environment": "server"
-    }
-  ],
   "depends": {
-    "fabricloader": ">=0.14.21",
-    "minecraft": "~1.20.1",
+    "fabricloader": ">=${loader_version}",
+    "minecraft": "~${minecraft_version}",
     "java": ">=17",
     "fabric-api": "*"
   }

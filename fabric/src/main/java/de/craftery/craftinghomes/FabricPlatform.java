@@ -43,7 +43,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public class CraftingHomesMod implements ModInitializer, ServerEntry {
+public class FabricPlatform implements ModInitializer, ServerEntry {
     public static final Logger LOGGER = LoggerFactory.getLogger("craftinghomes");
 
     private static MinecraftServer server;
