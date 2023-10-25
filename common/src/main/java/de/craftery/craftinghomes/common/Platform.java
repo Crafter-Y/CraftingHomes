@@ -59,10 +59,17 @@ public class Platform {
 
     public static void shutdown() {
         server.log("Plugin is shutting down!");
+        server = null;
+        dataStorageProvider = null;
+        registeredDataModels.clear();
     }
 
     public static ServerEntry getServer() {
         return server;
+    }
+
+    public static I18n getI18n() {
+        return i18n;
     }
 
     public static DataStorageProvider getDataStorageProvider() {

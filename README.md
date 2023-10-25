@@ -65,6 +65,6 @@ Everything else is just there to make it work.
 - [x] data storage templating
 - [x] fabric implementation
 - [ ] other implementations like forge
-- [ ] more ci tests
-- [ ] unit tests
+- [ ] more ci tests (like smells or code coverage)
+- [x] unit tests
 - [ ] more data storage providers (mysql, sqlite, mongodb)
