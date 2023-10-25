@@ -1,5 +1,6 @@
 plugins {
     id("craftinghomes.java")
+    id "jacoco"
 }
 
 dependencies {
@@ -23,3 +24,12 @@ processResources {
         expand props
     }
 }
+
+jacocoTestReport {
+    reports {
+        xml.required = true
+        html.required = false
+    }
+}
+
+check.dependsOn jacocoTestReport
