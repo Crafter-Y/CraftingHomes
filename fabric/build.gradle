@@ -12,6 +12,10 @@ base {
 
 repositories {
     maven { url 'https://maven.nucleoid.xyz' }
+    maven {
+        name = "Modrinth"
+        url = "https://api.modrinth.com/maven"
+    }
 }
 
 loom {
@@ -32,13 +36,19 @@ dependencies {
 
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-
-    modImplementation include("eu.pb4:sgui:1.2.2+1.20")
+    compileOnly 'net.luckperms:api:5.4'
 
     api shadow(project(":common"))
     api shadow(project(":craftinghomes"))
     api shadow(project(":annotations"))
     api shadow('org.yaml:snakeyaml:2.1')
+
+    // Hard dependency
+    modImplementation include("eu.pb4:sgui:1.2.2+1.20")
+
+    // Optional dependencies
+    //modImplementation "maven.modrinth:luckperms:v5.4.102-fabric"
+    //modImplementation('me.lucko:fabric-permissions-api:0.2-SNAPSHOT')
 }
 
 remapJar {

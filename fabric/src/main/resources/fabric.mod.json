@@ -12,7 +12,11 @@
       "de.craftery.craftinghomes.FabricPlatform"
     ]
   },
+  "suggests": {
+    "luckperms": "*"
+  },
   "depends": {
+    "sgui": "1.2.2+1.20",
     "fabricloader": ">=${loader_version}",
     "minecraft": "~${minecraft_version}",
     "java": ">=17",
