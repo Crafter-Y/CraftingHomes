@@ -23,7 +23,7 @@ public class SethomeCommand extends PlayerOnlyCommand {
             home = new Home();
 
             Integer maxHomes = Platform.getServer().getConfiguration().getInt("maxHomes", 3);
-            if (Home.getByPlayer(player).size() >= maxHomes) {
+            if (Home.getByPlayer(player).size() >= maxHomes && !player.hasPermission("craftinghomes.bypass")) {
                 player.sendMessage(this.i18n.maxHomesReached(maxHomes));
                 return true;
             }

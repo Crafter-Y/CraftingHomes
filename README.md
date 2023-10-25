@@ -39,10 +39,10 @@ commands and no permission for normal commands.
 | craftinghomes.home        | Access to /home [home] command           | true          |
 | craftinghomes.sethome     | Access to /sethome [home] command        | true          |
 | craftinghomes.delhome     | Access to /delhome [home] command        | true          |
+| craftinghomes.bypass      | Allows bypassing the maxHomes limit      | op            |
 | craftinghomes.homes.*     | Access to all /homes commands            | op            |
 | craftinghomes.homes.use   | Access to /homes command                 | true          |
 | craftinghomes.homes.other | Access to /homes <player> [home] command | op            |
-
 
 ## Technical insight
 

@@ -41,6 +41,9 @@ permissions:
       craftinghomes.delhome:
         default: true
         description: Gives access to the /delhome command
+      craftinghomes.bypass:
+        default: op
+        description: Allows bypassing the maxHomes limit
       craftinghomes.homes.*:
         default: op
         description: Gives access to all the /homes commands
