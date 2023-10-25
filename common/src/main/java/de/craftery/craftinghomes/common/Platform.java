@@ -19,6 +19,9 @@ public class Platform {
         server = entry;
         server.log("Plugin is starting up!");
 
+        server.log("Preloading config");
+        Platform.getServer().getConfiguration().saveConfig();
+
         server.log("Registering i18n!");
         i18n.register();
 
@@ -56,10 +59,17 @@ public class Platform {
 
     public static void shutdown() {
         server.log("Plugin is shutting down!");
+        server = null;
+        dataStorageProvider = null;
+        registeredDataModels.clear();
     }
 
     public static ServerEntry getServer() {
         return server;
+    }
+
+    public static I18n getI18n() {
+        return i18n;
     }
 
     public static DataStorageProvider getDataStorageProvider() {

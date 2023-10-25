@@ -8,6 +8,7 @@ import de.craftery.craftinghomes.common.api.PlayerI;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Command(name = "home")
 @SuppressWarnings("unused")
@@ -32,7 +33,7 @@ public class HomeCommand extends PlayerOnlyCommand {
     @Override
     public List<String> onTabComplete(PlayerI player, int argLength) {
         if (argLength == 1) {
-            return Home.getByPlayer(player).stream().map(Home::getName).toList();
+            return Home.getByPlayer(player).stream().map(Home::getName).collect(Collectors.toList());
         }
 
         return new ArrayList<>();

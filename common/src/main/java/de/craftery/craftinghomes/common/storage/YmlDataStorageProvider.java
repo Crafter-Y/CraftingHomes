@@ -14,6 +14,7 @@ public class YmlDataStorageProvider implements DataStorageProvider {
 
     public YmlDataStorageProvider() {
         configuration = Platform.getServer().getConfiguration("database.yml");
+        configuration.saveConfig();
     }
 
     @Override
@@ -39,10 +40,10 @@ public class YmlDataStorageProvider implements DataStorageProvider {
         for (Map.Entry<String, Map.Entry<FieldType, Object>> field : saveObject.entrySet()) {
             String path = qualifiedName + "." + id + "." + field.getKey();
             switch (field.getValue().getKey()) {
-                case STRING -> configuration.set(path, (String) field.getValue().getValue());
-                case DOUBLE -> configuration.set(path, (Double) field.getValue().getValue());
-                case LONG -> configuration.set(path, (Long) field.getValue().getValue());
-                case FLOAT -> configuration.set(path, (Float) field.getValue().getValue());
+                case STRING: { configuration.set(path, (String) field.getValue().getValue()); break; }
+                case DOUBLE: { configuration.set(path, (Double) field.getValue().getValue()); break; }
+                case LONG: { configuration.set(path, (Long) field.getValue().getValue()); break; }
+                case FLOAT: { configuration.set(path, (Float) field.getValue().getValue()); break; }
             }
         }
         configuration.saveConfig();
@@ -55,12 +56,14 @@ public class YmlDataStorageProvider implements DataStorageProvider {
     }
 
     private @Nullable Object getField(String path, FieldType type) {
-        return switch (type) {
-            case STRING -> configuration.getString(path);
-            case DOUBLE -> configuration.getDouble(path);
-            case LONG -> configuration.getLong(path);
-            case FLOAT -> (float) configuration.getDouble(path);
+        Object toType = null;
+        switch (type) {
+            case STRING: { toType = configuration.getString(path); break; }
+            case DOUBLE: { toType = configuration.getDouble(path); break; }
+            case LONG: { toType = configuration.getLong(path); break; }
+            case FLOAT: { toType = configuration.getFloat(path); break; }
         };
+        return toType;
     }
 
     @Override
@@ -68,8 +71,8 @@ public class YmlDataStorageProvider implements DataStorageProvider {
         if (fields.get(field) == null) {
             throw new RuntimeException("Field " + field + " does not exist in " + qualifiedName);
         }
-        if (!configuration.exists(qualifiedName)) return new ArrayList<>();
 
+        if (!configuration.exists(qualifiedName)) return new ArrayList<>();
 
         List<T> result = new ArrayList<>();
         for (String entry : configuration.getKeys(qualifiedName)) {
@@ -83,9 +86,9 @@ public class YmlDataStorageProvider implements DataStorageProvider {
                 T instance = clazz.getDeclaredConstructor().newInstance();
                 instance.setId(Long.parseLong(entry));
                 for (Map.Entry<String, FieldType> requestedFields : fields.entrySet()) {
-                    instance.setField(requestedFields.getKey(), getField(row + "." + requestedFields.getKey(), requestedFields.getValue()));
+                    Object fieldValue = getField(row + "." + requestedFields.getKey(), requestedFields.getValue());
+                    instance.setField(requestedFields.getKey(), fieldValue);
                 }
-
                 result.add(instance);
             } catch (InvocationTargetException | InstantiationException | IllegalAccessException | NoSuchMethodException e) {
                 throw new RuntimeException("Could not create instance of " + clazz.getSimpleName(), e);
@@ -97,7 +100,7 @@ public class YmlDataStorageProvider implements DataStorageProvider {
 
     @Override
     public void delete(String qualifiedName, long id) {
-        configuration.set(qualifiedName + "." + id, null);
+        configuration.delete(qualifiedName + "." + id);
         configuration.saveConfig();
     }
 }

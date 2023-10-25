@@ -5,7 +5,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.persistence.PersistentDataType;
 
 public class InventoryProtector implements Listener {
     @EventHandler
@@ -17,12 +16,9 @@ public class InventoryProtector implements Listener {
             if (clickedItem == null) {
                 return;
             }
-            String key = clickedItem.getItemMeta().getPersistentDataContainer().get(BukkitPlatform.GUI_ITEM_KEY, PersistentDataType.STRING);
-            if (key == null) {
-                return;
-            }
-            GuiClickCallback callback = BukkitPlatform.getInstance().guiClickCallbacks.get(key);
-            callback.onClick();
+
+            GuiClickCallback callback = BukkitPlatform.getInstance().guiClickCallbacks.get(clickedItem);
+            if (callback != null) callback.onClick();
         }
     }
 }

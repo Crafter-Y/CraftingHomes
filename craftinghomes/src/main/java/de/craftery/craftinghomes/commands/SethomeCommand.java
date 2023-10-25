@@ -21,12 +21,12 @@ public class SethomeCommand extends PlayerOnlyCommand {
         Home home = Home.getPlayerHome(player, homeName);
         if (home == null) {
             home = new Home();
-        }
 
-        Integer maxHomes = Platform.getServer().getConfiguration().getInt("maxHomes", 3);
-        if (Home.getByPlayer(player).size() >= maxHomes) {
-            player.sendMessage(this.i18n.maxHomesReached(maxHomes));
-            return true;
+            Integer maxHomes = Platform.getServer().getConfiguration().getInt("maxHomes", 3);
+            if (Home.getByPlayer(player).size() >= maxHomes && !player.hasPermission("craftinghomes.bypass")) {
+                player.sendMessage(this.i18n.maxHomesReached(maxHomes));
+                return true;
+            }
         }
 
         home.setPlayer(player);
@@ -35,7 +35,7 @@ public class SethomeCommand extends PlayerOnlyCommand {
 
         home.saveOrUpdate();
 
-        player.sendMessage("&aHome with the name &b" + homeName + " &ahas been set!");
+        player.sendMessage(this.i18n.homeSet(homeName));
 
         return true;
     }

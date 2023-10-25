@@ -42,6 +42,11 @@ public class ConfigrationImpl implements ConfigurationI {
     }
 
     @Override
+    public void delete(String path) {
+        this.config.set(path, null);
+    }
+
+    @Override
     public Integer getInt(String path, int def) {
         return this.config.getInt(path, def);
     }
@@ -57,13 +62,18 @@ public class ConfigrationImpl implements ConfigurationI {
     }
 
     @Override
-    public double getDouble(String path) {
+    public Double getDouble(String path) {
         return this.config.getDouble(path);
     }
 
     @Override
-    public long getLong(String path) {
+    public Long getLong(String path) {
         return this.config.getLong(path);
+    }
+
+    @Override
+    public Float getFloat(String path) {
+        return (float) this.config.getDouble(path);
     }
 
     @Override

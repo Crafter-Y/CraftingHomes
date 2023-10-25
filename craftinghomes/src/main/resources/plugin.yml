@@ -1,7 +1,7 @@
 name: CraftingHomes
 version: '${version}'
 main: de.craftery.craftinghomes.BukkitPlatform
-api-version: 1.20
+api-version: 1.13
 authors: [Crafter_Y]
 description: A simple homes plugin
 website: https://crafter-y.de
@@ -41,6 +41,9 @@ permissions:
       craftinghomes.delhome:
         default: true
         description: Gives access to the /delhome command
+      craftinghomes.bypass:
+        default: op
+        description: Allows bypassing the maxHomes limit
       craftinghomes.homes.*:
         default: op
         description: Gives access to all the /homes commands

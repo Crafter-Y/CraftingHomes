@@ -10,9 +10,9 @@ import de.craftery.craftinghomes.common.gui.GuiBuilder;
 import de.craftery.craftinghomes.common.gui.GuiClickCallback;
 import de.craftery.craftinghomes.common.gui.GuiItem;
 import de.craftery.craftinghomes.helper.CommandStub;
-
 import de.craftery.craftinghomes.impl.ConfigrationImpl;
 import de.craftery.craftinghomes.impl.OfflinePlayerImpl;
+
 import org.bukkit.*;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
@@ -21,28 +21,25 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 public final class BukkitPlatform extends JavaPlugin implements ServerEntry {
     private static BukkitPlatform instance;
 
-    public static NamespacedKey GUI_ITEM_KEY;
-
     private final List<String> commands = new ArrayList<>();
 
-    public final Map<String, GuiClickCallback> guiClickCallbacks = new HashMap<>();
+    public final Map<ItemStack, GuiClickCallback> guiClickCallbacks = new HashMap<>();
     public final Set<String> protectedWindowTitles = new HashSet<>();
 
     @Override
     public void onEnable() {
         instance = this;
         Platform.onEnable(this);
-        GUI_ITEM_KEY = new NamespacedKey(this, "gui_item");
         this.getServer().getPluginManager().registerEvents(new InventoryProtector(), this);
         this.saveDefaultConfig();
     }
@@ -111,11 +108,10 @@ public final class BukkitPlatform extends JavaPlugin implements ServerEntry {
             //TODO: Use player heads for this
 
             ItemMeta meta = invItem.getItemMeta();
-            meta.setLore(item.getValue().lores().stream().map(s -> ChatColor.translateAlternateColorCodes('&', s)).toList());
-            meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', item.getValue().name()));
-            meta.getPersistentDataContainer().set(GUI_ITEM_KEY, PersistentDataType.STRING, item.getValue().identifier());
+            meta.setLore(item.getValue().getLores().stream().map(s -> ChatColor.translateAlternateColorCodes('&', s)).collect(Collectors.toList()));
+            meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', item.getValue().getName()));
             invItem.setItemMeta(meta);
-            this.guiClickCallbacks.put(item.getValue().identifier(), item.getValue().callback());
+            this.guiClickCallbacks.put(invItem, item.getValue().getCallback());
 
             inv.setItem(item.getKey(), invItem);
         }

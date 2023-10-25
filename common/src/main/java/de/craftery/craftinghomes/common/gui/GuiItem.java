@@ -1,6 +1,16 @@
 package de.craftery.craftinghomes.common.gui;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
 import java.util.List;
 
-public record GuiItem(GuiItemType type, String name, List<String> lores, String identifier, GuiClickCallback callback) {
+@Data
+@AllArgsConstructor
+public class GuiItem {
+    private GuiItemType type;
+    private String name;
+    private List<String> lores;
+    private String identifier;
+    private GuiClickCallback callback;
 }
