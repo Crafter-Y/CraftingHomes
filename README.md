@@ -6,6 +6,7 @@ A simple Home plugin.
 [![Java CI with Gradle](https://github.com/Crafter-Y/CraftingHomes/actions/workflows/gradle.yml/badge.svg)](https://github.com/Crafter-Y/CraftingHomes/actions/workflows/gradle.yml)
 ![GitHub contributors](https://img.shields.io/github/contributors/Crafter-Y/CraftingHomes)
 ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/Crafter-Y/CraftingHomes/dev)
+![codecov](https://codecov.io/gh/Crafter-Y/CraftingHomes/branch/dev/graph/badge.svg)
 
 By itself, this is supposed to be a simple Home 
 plugin (for now) that has the basic commands `/home`, `/homes`,
@@ -67,6 +68,6 @@ Everything else is just there to make it work.
 - [x] data storage templating
 - [x] fabric implementation
 - [ ] other implementations like forge
-- [ ] more ci tests (like smells or code coverage)
+- [x] more ci tests
 - [x] unit tests
 - [ ] more data storage providers (mysql, sqlite, mongodb)
