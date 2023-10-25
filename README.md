@@ -28,6 +28,22 @@ Several things can be configured in the `config.yml` file.
 
 You can add your own language by creating a new file your_language.lang.yml
 
+## Permissions
+
+If there is no permission provider (Fabric without LuckPerms), op (level 3) is the default permission for admin 
+commands and no permission for normal commands.
+
+| Permission Node           | Description                              | Default Value |
+|---------------------------|------------------------------------------|---------------|
+| craftinghomes.*           | All CraftingHomes permissions            | op            |
+| craftinghomes.home        | Access to /home [home] command           | true          |
+| craftinghomes.sethome     | Access to /sethome [home] command        | true          |
+| craftinghomes.delhome     | Access to /delhome [home] command        | true          |
+| craftinghomes.homes.*     | Access to all /homes commands            | op            |
+| craftinghomes.homes.use   | Access to /homes command                 | true          |
+| craftinghomes.homes.other | Access to /homes <player> [home] command | op            |
+
+
 ## Technical insight
 
 I know that I over-complicated many things, but this is a kind of exercise for me.
