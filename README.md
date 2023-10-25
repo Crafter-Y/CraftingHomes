@@ -32,7 +32,7 @@ You can add your own language by creating a new file your_language.lang.yml
 
 I know that I over-complicated many things, but this is a kind of exercise for me.
 You may look at the `craftinghomes` subproject that contains the whole logic. 
-Everything else is just to make it work.
+Everything else is just there to make it work.
 
 [![Logic Diagram](./.github/media/craftinghomeslogic.png)](https://github.com/Crafter-Y/CraftingHomes)
 

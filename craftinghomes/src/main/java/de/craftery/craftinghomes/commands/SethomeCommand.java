@@ -35,7 +35,7 @@ public class SethomeCommand extends PlayerOnlyCommand {
 
         home.saveOrUpdate();
 
-        player.sendMessage("&aHome with the name &b" + homeName + " &ahas been set!");
+        player.sendMessage(this.i18n.homeSet(homeName));
 
         return true;
     }

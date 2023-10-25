@@ -39,5 +39,6 @@ public interface Messages {
     String otherPlayersHome(String playerName);
     @I18nDef(def = "&aYou have been teleported to ${targetName}'s home &b${homeName}&a!")
     String teleportedToOthersHome(String targetName, String homeName);
-
+    @I18nDef(def = "&aHome with the name &b${homeName}&a has been set!")
+    String homeSet(String homeName);
 }
