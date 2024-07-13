@@ -14,10 +14,10 @@ plugin (for now) that has the basic commands `/home`, `/homes`,
 
 ## Versions
 
-| Platform                     | Version(s)   | Dependencies                                                                 | Optional Dependencies                       |
-|------------------------------|--------------|------------------------------------------------------------------------------|---------------------------------------------|
-| Bukkit (Spigot, Paper, etc.) | 1.8.8-1.20.2 | none                                                                         | none                                        |
-| Fabric                       | 1.20.1       | [sgui  1.2.2+1.20](https://github.com/Patbox/sgui/releases/tag/1.2.2%2B1.20) | [LuckPerms](https://luckperms.net/download) |
+| Platform                     | Version(s) | Dependencies                                                                 | Optional Dependencies                       |
+|------------------------------|------------|------------------------------------------------------------------------------|---------------------------------------------|
+| Bukkit (Spigot, Paper, etc.) | 1.8.8-1.21 | none                                                                         | none                                        |
+| Fabric                       | 1.20.1     | [sgui  1.2.2+1.20](https://github.com/Patbox/sgui/releases/tag/1.2.2%2B1.20) | [LuckPerms](https://luckperms.net/download) |
 
 Platform or version missing? Just create an issue.
 
