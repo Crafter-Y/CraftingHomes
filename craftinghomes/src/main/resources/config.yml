@@ -4,5 +4,14 @@ maxHomes: 3
 # The language to use. All language files must be in format language.lang.yml e.g. en.lang.yml
 language: en
 
-# The configuration type to use. Supported providers: (yml)
+# The configuration type to use. Supported providers: (yml, mysql)
 storage: yml
+
+# MySQL configuration (only needed if storage is set to mysql)
+mysql:
+  host: localhost
+  port: 3306
+  database: craftinghomes
+  username: root
+  password:
+  prefix: ch_

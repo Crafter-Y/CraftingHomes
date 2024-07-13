@@ -1,0 +1,28 @@
+
+
+services:
+  db:
+    image: mariadb:11.3.2
+    restart: unless-stopped
+    command: --lower_case_table_names=1
+    environment:
+      MARIADB_RANDOM_ROOT_PASSWORD: yes
+      MYSQL_DATABASE: craftinghomes
+      MYSQL_USER: username
+      MYSQL_PASSWORD: password
+    ports:
+      - "3306:3306"
+    volumes:
+      - craftinghomes_dev:/var/lib/mysql
+  phpmyadmin:
+    image: phpmyadmin
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    environment:
+      PMA_HOST: db
+      PMA_USER: username
+      PMA_PASSWORD: password
+
+volumes:
+  craftinghomes_dev:

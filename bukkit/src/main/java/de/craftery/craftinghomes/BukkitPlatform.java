@@ -13,6 +13,7 @@ import de.craftery.craftinghomes.helper.CommandStub;
 import de.craftery.craftinghomes.impl.ConfigrationImpl;
 import de.craftery.craftinghomes.impl.OfflinePlayerImpl;
 
+import lombok.Getter;
 import org.bukkit.*;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
@@ -29,6 +30,7 @@ import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 public final class BukkitPlatform extends JavaPlugin implements ServerEntry {
+    @Getter
     private static BukkitPlatform instance;
 
     private final List<String> commands = new ArrayList<>();
@@ -39,6 +41,7 @@ public final class BukkitPlatform extends JavaPlugin implements ServerEntry {
     @Override
     public void onEnable() {
         instance = this;
+        this.saveDefaultConfig();
         Platform.onEnable(this);
         this.getServer().getPluginManager().registerEvents(new InventoryProtector(), this);
         this.saveDefaultConfig();
@@ -119,10 +122,5 @@ public final class BukkitPlatform extends JavaPlugin implements ServerEntry {
         Player p = Bukkit.getPlayer(UUID.fromString(player.getUniqueId()));
         if (p == null) return;
         p.openInventory(inv);
-    }
-
-
-    public static BukkitPlatform getInstance() {
-        return instance;
     }
 }

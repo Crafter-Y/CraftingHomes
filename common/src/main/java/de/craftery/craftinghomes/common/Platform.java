@@ -3,14 +3,19 @@ package de.craftery.craftinghomes.common;
 import de.craftery.craftinghomes.common.i18n.I18n;
 import de.craftery.craftinghomes.common.storage.AbstractDataModel;
 import de.craftery.craftinghomes.common.storage.DataStorageProvider;
+import de.craftery.craftinghomes.common.storage.MySqlStorageProvider;
 import de.craftery.craftinghomes.common.storage.YmlDataStorageProvider;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Platform {
+    @Getter
     private static ServerEntry server;
+    @Getter
     private static final I18n i18n = new I18n();
+    @Getter
     private static DataStorageProvider dataStorageProvider = null;
 
     private static final List<String> registeredDataModels = new ArrayList<>();
@@ -50,8 +55,19 @@ public class Platform {
         String provider = server.getConfiguration().getString("storage", "yml");
 
         // TODO: register other data providers
-        if (provider.equals("yml")) {
-            dataStorageProvider = new YmlDataStorageProvider();
+        switch (provider) {
+            case "yml": {
+                dataStorageProvider = new YmlDataStorageProvider();
+                break;
+            }
+            case "mysql": {
+                dataStorageProvider = new MySqlStorageProvider();
+                break;
+            }
+            default: {
+                dataStorageProvider = new YmlDataStorageProvider();
+                server.log("Storage Provider '" + provider + "' not found.");
+            }
         }
 
         server.log("Registered data storage provider " + dataStorageProvider.getClass().getSimpleName());
@@ -60,19 +76,8 @@ public class Platform {
     public static void shutdown() {
         server.log("Plugin is shutting down!");
         server = null;
+        dataStorageProvider.shutdown();
         dataStorageProvider = null;
         registeredDataModels.clear();
-    }
-
-    public static ServerEntry getServer() {
-        return server;
-    }
-
-    public static I18n getI18n() {
-        return i18n;
-    }
-
-    public static DataStorageProvider getDataStorageProvider() {
-        return dataStorageProvider;
     }
 }

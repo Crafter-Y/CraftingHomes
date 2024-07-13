@@ -62,7 +62,7 @@ public class YmlDataStorageProvider implements DataStorageProvider {
             case DOUBLE: { toType = configuration.getDouble(path); break; }
             case LONG: { toType = configuration.getLong(path); break; }
             case FLOAT: { toType = configuration.getFloat(path); break; }
-        };
+        }
         return toType;
     }
 
@@ -102,5 +102,10 @@ public class YmlDataStorageProvider implements DataStorageProvider {
     public void delete(String qualifiedName, long id) {
         configuration.delete(qualifiedName + "." + id);
         configuration.saveConfig();
+    }
+
+    @Override
+    public void shutdown() {
+        // nothing has to be done here
     }
 }

@@ -10,4 +10,5 @@ public interface DataStorageProvider {
     void update(String qualifiedName, long id, Map<String, Map.Entry<FieldType, Object>> saveObject);
     <T extends AbstractDataModel> List<T> getByField(String qualifiedName, Class<T> clazz, Map<String, FieldType> fields, String field, Object value);
     void delete(String qualifiedName, long id);
+    void shutdown();
 }
